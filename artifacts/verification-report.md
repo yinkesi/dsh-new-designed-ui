@@ -1,34 +1,47 @@
-# Yinkesi 0.1.0 verification report
+# Yinkesi 0.2.0 verification report
 
-Verified on 2026-08-14 against the user's local DeepSeek Harness Web `0.1.0-rc.5` source checkout.
+Verified on 2026-08-14 against the user's local DeepSeek Harness Web `0.1.0-rc.5` source checkout and the public `0.1.0-rc.6` npm release.
 
 ## Delivery
 
-- Package: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.1.0.tgz`
-- SHA256: `946920F5D0DF0E6F8A545394C9C385A816C5CF2C601FBBEF53DEE3CC2DD9FE31`
+- Package: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.2.0.tgz`
+- SHA256: `0FC1C913B4C564F3537E2791CF37F4070D9C369F0BA662F7269F247C80C406A2`
 - Installed profile: `web`
-- Installed bundle: `dsh-yinkesi@0.1.0`
+- Installed bundle: `dsh-yinkesi@0.2.0`
 - Local service: `http://127.0.0.1:3080/`
-- Profile backup: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\yinkesi-profile-backup-20260814-182315`
+- Profile backup: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\yinkesi-profile-backup-20260814-201833`
 
 ## Automated checks
 
-- 24 of 24 Node tests passed.
+- 25 of 25 Node tests passed.
 - Package safety audit passed.
-- The package was rebuilt and reproduced the delivered SHA256.
 - The archive contains exactly six published files: the manifest, license, README, bundle patch, inert Host entry, and prebuilt browser client.
 - No dependency, install hook, remote asset, telemetry, credential access, persistent storage, model call, or plugin-originated network request was found.
-- Isolated-profile install and remove were both exercised through the official DSH plugin commands.
+- The compatibility contract was generalized from an rc.5-specific label to a shared `web-v1` marker, with the same stable `data-slot`/role/ARIA detection and reversible cleanup.
 
 ## Browser checks
 
-- The plugin client returned HTTP 200 from the real profile.
-- The rc.5 compatibility adapter loaded without browser or console errors.
-- Warm light palette, rounded inset sidebar, blue whale, responsive layouts, reduced-motion mode, and system dark-preference isolation were verified.
-- The mirrored Customize control opened the official Settings panel.
-- An existing session was opened without sending a message. Conversation and Trajectory were switched in both directions, the original first-party tabs stayed synchronized, and the official Trajectory timeline rendered.
+### DeepSeek Harness `0.1.0-rc.5` (isolated profile, `http://127.0.0.1:3181`)
+
+- Verifier result: `ok: true`, compatibility `web-v1`.
+- White palette resolved (`--dsw-alias-bg-base` and `--dsw-alias-bg-layer-1` are `#FFFFFF`; brand stays `#4D6BFE`).
+- Font family excludes `Segoe UI Variable` and resolves to the asset-free stack; global letter spacing is `normal`.
+- Sidebar surface is white with a 16 px radius; the expanded wordmark button computes to `display: none` while the collapse toggle stays visible.
+- Customize row measures 36 px and opens the official Settings panel.
+- Reduced-motion, system dark-preference isolation, and light-only palette checks passed.
+- No console errors, page errors, or Yinkesi-initiated external requests.
+
+### DeepSeek Harness `0.1.0-rc.6` (public, isolated profile, `http://127.0.0.1:3182`)
+
+- Verifier result: `ok: true`, compatibility `web-v1`, identical white palette, typography, and geometry results as rc.5.
+
+### Real profile (`http://127.0.0.1:3080`)
+
+- The installed client returns HTTP 200 and serves `packageVersion: "0.2.0"` with no unresolved placeholders.
+- An existing session was opened without sending a message. The compact geometry was measured exactly: Conversation/Trajectory switch 44 px, Customize 36 px, session/tree rows 28 px, and the expanded wordmark hidden.
+- Conversation → Trajectory → Conversation round-tripped through the first-party tabs; the official Trajectory timeline rendered (two `[data-trajectory-scroll]` surfaces).
 - The previously selected session and Conversation view were restored after verification.
-- No model request was submitted during verification, so the acceptance test incurred no model/API charge.
+- No composer submission, model request, console error, page error, or external request occurred during verification, so acceptance incurred no model/API charge.
 
 ## Rollback
 
@@ -39,4 +52,4 @@ $env:DSH_HOME = 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\dsh-home'
 pnpm dsh plugin --profile web remove dsh-yinkesi
 ```
 
-Restart DeepSeek Harness. The official presentation returns, while sessions and data remain intact.
+Restart DeepSeek Harness. The official presentation returns, while sessions and data remain intact. The exact pre-swap profile files are preserved under the profile backup path above.

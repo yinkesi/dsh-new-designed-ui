@@ -296,13 +296,13 @@
   {
     "method": "POST",
     "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/credentials.describe",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
     "external": false
   },
   {
     "method": "POST",
     "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "url": "http://127.0.0.1:3080/api/credentials.describe",
     "external": false
   },
   {
@@ -360,9 +360,9 @@
     "external": false
   },
   {
-    "method": "GET",
-    "type": "other",
-    "url": "http://127.0.0.1:3080/favicon.svg",
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
     "external": false
   },
   {
@@ -402,9 +402,9 @@
     "external": false
   },
   {
-    "method": "POST",
-    "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "method": "GET",
+    "type": "other",
+    "url": "http://127.0.0.1:3080/favicon.svg",
     "external": false
   },
   {
@@ -477,6 +477,54 @@
     "method": "POST",
     "type": "fetch",
     "url": "http://127.0.0.1:3080/api/credentials.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/subagent.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/session.history",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/inventory",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/skill.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/commands/list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/agentPreset.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/session.models",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
     "external": false
   },
   {
