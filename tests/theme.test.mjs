@@ -41,7 +41,7 @@ const requiredTokens = [
   '--dsw-shadow-lv3',
 ]
 
-test('theme tokens are one flat, complete, locally-resolved warm palette', async () => {
+test('theme tokens are one flat, complete, locally-resolved white palette', async () => {
   const tokens = await readJson('../src/theme/tokens.json')
 
   assert.equal(Object.getPrototypeOf(tokens), Object.prototype)
