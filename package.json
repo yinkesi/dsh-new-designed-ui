@@ -21,7 +21,7 @@
     "build": "node scripts/build.mjs",
     "audit": "node scripts/audit-package.mjs",
     "verify:bundle": "node --test tests/build.test.mjs",
-    "pack:local": "pnpm run build && pnpm run audit && pnpm pack --pack-destination dist"
+    "pack:local": "pnpm run test && pnpm run build && pnpm run audit && pnpm pack --pack-destination dist"
   },
   "dsh": {
     "bundle": {

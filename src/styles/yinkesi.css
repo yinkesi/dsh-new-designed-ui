@@ -4,7 +4,9 @@
  * official theme-token override and all first-party controls remain visible.
  */
 
-html[data-yinkesi-compatible="rc5"] {
+/* Harness publishes the resolved --dsw-* variables on body. Keep Yinkesi's
+ * aliases in that same inheritance scope so var() sees the published values. */
+html[data-yinkesi-compatible="rc5"] body {
   --yinkesi-app-surface: var(--dsw-alias-bg-base);
   --yinkesi-content-surface: var(--dsw-alias-bg-layer-1);
   --yinkesi-sidebar-surface: var(--dsw-specific-sidebar-fill);
@@ -16,12 +18,45 @@ html[data-yinkesi-compatible="rc5"] {
   --yinkesi-radius-sidebar: 1.125rem;
   --yinkesi-radius-panel: 1rem;
   --yinkesi-radius-control: 0.625rem;
-  --yinkesi-motion-press: 70ms;
-  --yinkesi-motion-hover: 140ms;
-  --yinkesi-motion-panel: 340ms;
-  --yinkesi-spring: cubic-bezier(0.22, 1, 0.36, 1);
-  --yinkesi-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --yinkesi-motion-press: __YINKESI_MOTION_PRESS__;
+  --yinkesi-motion-hover: __YINKESI_MOTION_HOVER__;
+  --yinkesi-motion-panel: __YINKESI_MOTION_PANEL__;
+  --yinkesi-spring: __YINKESI_EASING_SPRING__;
+  --yinkesi-standard: __YINKESI_EASING_STANDARD__;
   color-scheme: light;
+
+  /* These rc.5 variables live outside ThemeRuntime and otherwise follow the
+   * user's underlying dark preference. Pin their complete light palette so
+   * Yinkesi stays intentionally light-only on every system setting. */
+  --dsw-linear-gradient-think: linear-gradient(180deg, #FFFEFA 20.19%, rgba(255, 254, 250, 0) 100%);
+  --dsw-linear-think-select: linear-gradient(180deg, #F7F6F3 20.19%, rgba(247, 246, 243, 0) 100%);
+  --shiki-foreground: var(--dsw-alias-label-primary);
+  --shiki-background: var(--dsw-alias-markdown-code-block);
+  --shiki-token-constant: #1C7ED6;
+  --shiki-token-string: #2F9E44;
+  --shiki-token-comment: #77716B;
+  --shiki-token-keyword: #D6336C;
+  --shiki-token-parameter: #C95618;
+  --shiki-token-function: #6741D9;
+  --shiki-token-string-expression: #2B8A3E;
+  --shiki-token-punctuation: #495057;
+  --shiki-token-link: #1971C2;
+}
+
+/* JsonTree owns its palette on a generated-class root, including a dark
+ * descendant override. Re-assert the light values on stable semantic
+ * descendants used by Trajectory details, without selecting hashed classes. */
+html[data-yinkesi-compatible="rc5"] [data-slot="conversation.view"] :is(
+  [role="tree"],
+  :has(> [data-json-root-row])
+) {
+  --json-tree-property: #881391;
+  --json-tree-string: #C41A16;
+  --json-tree-number: #1C00CF;
+  --json-tree-keyword: #1C00CF;
+  --json-tree-punctuation: #202124;
+  --json-tree-icon: #5F6368;
+  --json-tree-hover: rgb(60 64 67 / 4%);
 }
 
 /* App frame: paper behind three restrained, inset work surfaces. */
@@ -36,7 +71,7 @@ html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child {
 html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child > :first-child {
   box-sizing: border-box;
   padding: 0.625rem 0 0.625rem 0.625rem;
-  overflow: visible;
+  overflow: hidden;
   border: 0;
   background: transparent;
 }
@@ -113,7 +148,7 @@ html[data-yinkesi-compatible="rc5"] [data-yinkesi-customize]:hover {
 html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child > button:active,
 html[data-yinkesi-compatible="rc5"] [data-yinkesi-customize]:active,
 html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch] button:active {
-  transform: scale(.98);
+  transform: scale(__YINKESI_SCALE_PRESS__);
 }
 
 html[data-yinkesi-compatible="rc5"] [data-yinkesi-customize-icon] {
@@ -171,7 +206,7 @@ html[data-yinkesi-compatible="rc5"] [data-yinkesi-source-tabs] {
   display: none !important; /* Adapter-only: the enabled mirror owns this exact visibility state. */
 }
 
-html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child:has(> [data-yinkesi-customize]) [data-slot="sidebar.settings"] {
+html[data-yinkesi-compatible="rc5"] button[data-yinkesi-source-settings="hidden"] {
   display: none;
 }
 
@@ -340,7 +375,7 @@ html[data-yinkesi-compatible="rc5"] [role="toolbar"] button {
 
 html[data-yinkesi-compatible="rc5"] [data-composer-seat] button:active:not(:disabled),
 html[data-yinkesi-compatible="rc5"] [role="toolbar"] button:active:not(:disabled) {
-  scale: .98;
+  scale: __YINKESI_SCALE_PRESS__;
 }
 
 /* Trajectory remains the first-party ledger; only its materials are changed. */
@@ -526,12 +561,14 @@ html[data-yinkesi-compatible="rc5"] [data-slot="root"] > [data-sidebar-collapsed
   }
 
   html[data-yinkesi-compatible="rc5"] [data-yinkesi-owned],
+  html[data-yinkesi-compatible="rc5"] button[data-yinkesi-owned][data-yinkesi-customize],
   html[data-yinkesi-compatible="rc5"] [data-yinkesi-owned] *,
+  html[data-yinkesi-compatible="rc5"] [data-yinkesi-owned] button,
   html[data-yinkesi-compatible="rc5"] [data-composer-seat] button,
   html[data-yinkesi-compatible="rc5"] [role="toolbar"] button {
     animation: none;
     transition-property: opacity;
-    transition-duration: 1ms;
+    transition-duration: __YINKESI_MOTION_REDUCED__;
   }
 }
 

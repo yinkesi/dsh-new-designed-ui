@@ -27,6 +27,26 @@ function textOf(node) {
   return String(node?.textContent ?? '').trim()
 }
 
+function elementForMutationTarget(target) {
+  if (!target) return null
+  if (target.nodeType === 1) return target
+  return target.parentElement ?? null
+}
+
+function isPresentationMutation(record) {
+  const element = elementForMutationTarget(record?.target)
+  if (!element || typeof element.closest !== 'function') return true
+
+  /* Streaming chat and long Trajectory records update continuously but cannot
+   * change any adapter anchor. Ignore those mutations so visual output does
+   * not cause a full layout scan for every token. */
+  if (element.closest('[data-conversation-scroll], [data-trajectory-scroll]')) return false
+  if (record.type !== 'characterData') return true
+  return Boolean(element.closest(
+    '[data-slot="sidebar"], [data-slot="conversation.session.header"], [data-slot="sidebar.settings"]',
+  ))
+}
+
 function detectRc5Layout(document) {
   if (!document || typeof document.querySelector !== 'function') return null
   const rootSlot = document.querySelector('[data-slot="root"]')
@@ -191,10 +211,22 @@ function installRc5Adapter(options = {}) {
     restoreSourceTabs()
   }
 
+  function removeCustomize() {
+    if (!customizeState) return
+    restoreAttribute(
+      customizeState.sourceButton,
+      'data-yinkesi-source-settings',
+      customizeState.sourceMarker,
+    )
+    restoreAttribute(customizeState.sourceButton, 'aria-hidden', customizeState.sourceAriaHidden)
+    restoreAttribute(customizeState.sourceButton, 'tabindex', customizeState.sourceTabindex)
+    removeNode(customizeState.node)
+    customizeState = null
+  }
+
   function removeAdditions() {
     removeMirror()
-    removeNode(customizeState?.node)
-    customizeState = null
+    removeCustomize()
     removeNode(brandNode)
     brandNode = null
   }
@@ -300,7 +332,8 @@ function installRc5Adapter(options = {}) {
       if (button.textContent !== label) button.textContent = label
       setAttribute(button, 'aria-selected', selected ? 'true' : 'false')
       setAttribute(button, 'tabindex', selected ? '0' : '-1')
-      button.disabled = Boolean(source.disabled || source.hasAttribute?.('disabled'))
+      const disabled = Boolean(source.disabled || source.hasAttribute?.('disabled'))
+      if (button.disabled !== disabled) button.disabled = disabled
     }
     hideSourceTabs(tablist, tabs)
     return true
@@ -309,7 +342,7 @@ function installRc5Adapter(options = {}) {
   function ensureCustomize(layout) {
     const sourceButton = layout.settingsButton
     if (!customizeState || customizeState.sourceButton !== sourceButton || customizeState.node.parentElement !== layout.sidebarRoot) {
-      removeNode(customizeState?.node)
+      removeCustomize()
       const node = document.createElement('button')
       node.setAttribute('type', 'button')
       node.setAttribute('data-yinkesi-owned', 'true')
@@ -327,13 +360,29 @@ function installRc5Adapter(options = {}) {
       })
       const region = topLevelChild(layout.workspaceSlot, layout.sidebarRoot)
       layout.sidebarRoot.insertBefore(node, region)
-      customizeState = { node, label, sourceButton }
+      customizeState = {
+        node,
+        label,
+        sourceButton,
+        sourceMarker: readAttribute(sourceButton, 'data-yinkesi-source-settings'),
+        sourceAriaHidden: readAttribute(sourceButton, 'aria-hidden'),
+        sourceTabindex: readAttribute(sourceButton, 'tabindex'),
+      }
     }
 
     const label = customizeLabel(document, sourceButton)
     if (customizeState.label.textContent !== label) customizeState.label.textContent = label
     setAttribute(customizeState.node, 'aria-label', label)
-    customizeState.node.disabled = Boolean(sourceButton.disabled || sourceButton.hasAttribute?.('disabled'))
+    for (const attribute of ['aria-haspopup', 'aria-expanded', 'aria-controls']) {
+      const value = sourceButton.getAttribute?.(attribute)
+      if (value === null || value === undefined) customizeState.node.removeAttribute(attribute)
+      else setAttribute(customizeState.node, attribute, value)
+    }
+    const disabled = Boolean(sourceButton.disabled || sourceButton.hasAttribute?.('disabled'))
+    if (customizeState.node.disabled !== disabled) customizeState.node.disabled = disabled
+    setAttribute(sourceButton, 'data-yinkesi-source-settings', 'hidden')
+    setAttribute(sourceButton, 'aria-hidden', 'true')
+    setAttribute(sourceButton, 'tabindex', '-1')
   }
 
   function ensureBrand(layout) {
@@ -398,13 +447,25 @@ function installRc5Adapter(options = {}) {
 
   let mutationObserver = null
   if (typeof MutationObserverClass === 'function') {
-    mutationObserver = new MutationObserverClass(scheduleSync)
+    mutationObserver = new MutationObserverClass((records) => {
+      const changes = records ? Array.from(records) : []
+      if (changes.length === 0 || changes.some(isPresentationMutation)) scheduleSync()
+    })
     mutationObserver.observe(document.documentElement, {
       subtree: true,
       childList: true,
       characterData: true,
       attributes: true,
-      attributeFilter: ['aria-label', 'aria-selected', 'data-sidebar-collapsed', 'disabled', 'lang'],
+      attributeFilter: [
+        'aria-label',
+        'aria-selected',
+        'aria-haspopup',
+        'aria-expanded',
+        'aria-controls',
+        'data-sidebar-collapsed',
+        'disabled',
+        'lang',
+      ],
     })
   }
 
@@ -433,4 +494,5 @@ module.exports = {
   detectRc5Layout,
   installRc5Adapter,
   isCompleteLayout,
+  isPresentationMutation,
 }

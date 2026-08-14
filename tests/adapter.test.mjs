@@ -122,7 +122,7 @@ class FakeMutationObserver {
   }
   observe() {}
   disconnect() { this.disconnected = true }
-  trigger() { this.callback([]) }
+  trigger(records = []) { this.callback(records) }
 }
 
 class FakeResizeObserver extends FakeMutationObserver {}
@@ -148,7 +148,12 @@ function fixture() {
   const workspaceSlot = element(document, 'div', { 'data-slot': 'sidebar.workspaces' })
   const foot = element(document, 'div')
   const settingsSlot = element(document, 'div', { 'data-slot': 'sidebar.settings' })
-  const settingsButton = element(document, 'button', { 'aria-label': 'Settings' }, 'Settings')
+  const settingsButton = element(document, 'button', {
+    'aria-label': 'Settings',
+    'aria-haspopup': 'dialog',
+    'aria-expanded': 'false',
+    'aria-controls': 'settings-dialog',
+  }, 'Settings')
   const headerSlot = element(document, 'div', { 'data-slot': 'conversation.session.header' })
   const sourceTablist = element(document, 'div', { role: 'tablist', 'aria-label': 'View' })
   const conversation = element(document, 'button', { role: 'tab', 'aria-selected': 'true' }, 'Conversation')
@@ -232,6 +237,9 @@ test('adapter mirrors official tabs, proxies actions, tracks locale, and support
   assert.equal(findOwned(brand, 'data-yinkesi-brand-label').textContent, 'DeepSeek Harness')
   assert.equal(f.sourceTablist.getAttribute('data-yinkesi-source-tabs'), 'hidden')
   assert.equal(f.sourceTablist.getAttribute('aria-hidden'), 'true')
+  assert.equal(f.settingsButton.getAttribute('data-yinkesi-source-settings'), 'hidden')
+  assert.equal(f.settingsButton.getAttribute('aria-hidden'), 'true')
+  assert.equal(f.settingsButton.getAttribute('tabindex'), '-1')
 
   let mirrorTabs = mirror.querySelectorAll('[role="tab"]')
   assert.deepEqual(mirrorTabs.map((tab) => tab.textContent), ['Conversation', 'Trajectory'])
@@ -250,6 +258,12 @@ test('adapter mirrors official tabs, proxies actions, tracks locale, and support
   customize.click()
   assert.equal(f.settingsButton.clickCount, 1)
   assert.equal(findOwned(customize, 'data-yinkesi-customize-label').textContent, 'Customize')
+  assert.equal(customize.getAttribute('aria-haspopup'), 'dialog')
+  assert.equal(customize.getAttribute('aria-expanded'), 'false')
+  assert.equal(customize.getAttribute('aria-controls'), 'settings-dialog')
+  f.settingsButton.setAttribute('aria-expanded', 'true')
+  FakeMutationObserver.instances[0].trigger()
+  assert.equal(customize.getAttribute('aria-expanded'), 'true')
   f.document.documentElement.setAttribute('lang', 'zh-CN')
   f.settingsButton.textContent = '设置'
   f.settingsButton.setAttribute('aria-label', '设置')
@@ -263,6 +277,9 @@ test('adapter mirrors official tabs, proxies actions, tracks locale, and support
   assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-brand'), null)
   assert.equal(f.sourceTablist.hasAttribute('data-yinkesi-source-tabs'), false)
   assert.equal(f.sourceTablist.hasAttribute('aria-hidden'), false)
+  assert.equal(f.settingsButton.hasAttribute('data-yinkesi-source-settings'), false)
+  assert.equal(f.settingsButton.hasAttribute('aria-hidden'), false)
+  assert.equal(f.settingsButton.hasAttribute('tabindex'), false)
   assert.equal(FakeMutationObserver.instances.every((observer) => observer.disconnected), true)
   assert.equal(f.document.documentElement.hasAttribute('data-yinkesi-compatible'), false)
 })
@@ -320,5 +337,37 @@ test('incomplete rc.5 fixtures remain theme-only and warn at most once', () => {
   assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-customize'), null)
   assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-brand'), null)
   assert.equal(f.sourceTablist.hasAttribute('data-yinkesi-source-tabs'), false)
+  dispose()
+})
+
+test('streaming conversation text mutations do not trigger a layout rescan', () => {
+  const { installRc5Adapter } = require('../src/client/compat/rc5-adapter.cjs')
+  const f = fixture()
+  let scans = 0
+  const resolveLayout = () => {
+    scans += 1
+    return f.layout
+  }
+  const dispose = installRc5Adapter({
+    document: f.document,
+    window: f.window,
+    resolveLayout,
+    MutationObserver: FakeMutationObserver,
+    ResizeObserver: FakeResizeObserver,
+    enqueue: (callback) => callback(),
+    logger: { warn() {} },
+  })
+  const initialScans = scans
+  FakeMutationObserver.instances[0].trigger([{
+    type: 'characterData',
+    target: {
+      parentElement: {
+        closest(selector) {
+          return selector.includes('[data-conversation-scroll]') ? this : null
+        },
+      },
+    },
+  }])
+  assert.equal(scans, initialScans)
   dispose()
 })

@@ -46,6 +46,7 @@ test('package manifest has reproducible local tooling and no install hooks or de
     'test',
     'verify:bundle',
   ])
+  assert.match(manifest.scripts['pack:local'], /pnpm run test && pnpm run build && pnpm run audit/)
   for (const hook of ['prepare', 'preinstall', 'install', 'postinstall']) {
     assert.equal(manifest.scripts[hook], undefined, `${hook} must not run during installation`)
   }
