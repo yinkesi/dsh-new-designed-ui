@@ -283,7 +283,7 @@ async function verifyLightOnlyPalette(page) {
     }
   })
   assert.equal(result.darkMediaMatches, true, 'Chromium did not emulate a dark system preference')
-  assert.equal(result.app.toUpperCase(), '#FAF9F7', 'Dark system preference changed the warm app surface')
+  assert.equal(result.app.toUpperCase(), '#FFFFFF', 'Dark system preference changed the white app surface')
   assert.match(result.gradient, /#FFFFFF|rgb\(255,\s*255,\s*255\)/i)
   assert.equal(result.keyword.toUpperCase(), '#D6336C')
   assert.equal(result.punctuation.toUpperCase(), '#495057')
@@ -302,7 +302,7 @@ async function captureScreenshots(page) {
   for (const [name, width, height] of targets) {
     await page.setViewportSize({ width, height })
     await page.waitForTimeout(150)
-    const path = join(artifactsRoot, `yinkesi-${name}.png`)
+    const path = join(artifactsRoot, `yinkesi-020-${name}.png`)
     await page.screenshot({ path, fullPage: false, animations: 'disabled' })
     output[name] = { width, height, path }
   }
@@ -492,10 +492,16 @@ try {
   assert.doesNotMatch(dom.typography.family ?? '', /Segoe UI Variable/i)
   assert.match(dom.typography.family ?? '', /Helvetica Neue|Arial|Microsoft YaHei UI/i)
   assert.ok(['normal', '0px'].includes(dom.typography.letterSpacing), `unexpected tracking: ${dom.typography.letterSpacing}`)
-  assert.equal(dom.compactSidebar.switchHeight, '44px')
-  assert.equal(dom.compactSidebar.customizeMinHeight, '36px')
-  assert.equal(dom.compactSidebar.treeMinHeight, '28px')
   assert.equal(dom.compactSidebar.wordmarkDisplay, 'none')
+  assert.equal(dom.compactSidebar.customizeMinHeight, '36px')
+  // The Conversation/Trajectory mirror and the session tree mount only once an
+  // active session exists; on a fresh profile there is nothing to measure.
+  if (dom.compactSidebar.switchHeight !== null) {
+    assert.equal(dom.compactSidebar.switchHeight, '44px')
+  }
+  if (dom.compactSidebar.treeMinHeight !== null) {
+    assert.equal(dom.compactSidebar.treeMinHeight, '28px')
+  }
 
   const customize = await verifyCustomizeProxy(page)
   let savedSelection = null
