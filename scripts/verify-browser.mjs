@@ -14,6 +14,7 @@ const artifactsRoot = join(projectRoot, 'artifacts')
 const baseUrl = new URL(process.env.YINKESI_BASE_URL || 'http://127.0.0.1:3181')
 const styleSelector = 'style[data-plugin="dsh-yinkesi"][data-yinkesi-style="runtime"]'
 const clientPath = '/plugins/dsh-yinkesi/client.js'
+const verifyExistingSession = process.env.YINKESI_VERIFY_EXISTING_SESSION === '1'
 const bootTimeoutMs = 30_000
 const chromiumExecutable = [
   process.env.YINKESI_CHROMIUM_PATH,
@@ -182,6 +183,52 @@ async function verifyConversationTrajectoryRoundTrip(page) {
   }
 }
 
+async function openExistingSessionView(page) {
+  const state = await page.evaluate(() => {
+    const mirror = document.querySelector('[data-yinkesi-view-switch]')
+    if (mirror && mirror.querySelectorAll('[role="tab"]').length >= 2) return { ready: true }
+    const selected = document.querySelector('[data-slot="sidebar"] [role="treeitem"][aria-selected="true"], [data-slot="sidebar"] [role="treeitem"][aria-current="true"]')
+    const rows = Array.from(document.querySelectorAll('[data-slot="sidebar"] [role="treeitem"]'))
+    const target = rows.find((node) => node !== selected
+      && node.getAttribute('aria-selected') !== 'true'
+      && node.getAttribute('aria-current') !== 'true')
+    const textOf = (node) => (node?.textContent ?? '').trim() || (node?.getAttribute?.('aria-label') ?? '').trim()
+    return {
+      ready: false,
+      selectedText: textOf(selected),
+      targetText: textOf(target),
+    }
+  })
+
+  if (state.ready || !state.targetText) return null
+
+  const rows = page.locator('[data-slot="sidebar"] [role="treeitem"]')
+  const count = await rows.count()
+  for (let index = 0; index < count; index += 1) {
+    if (((await rows.nth(index).textContent()) ?? '').trim() === state.targetText) {
+      await rows.nth(index).click()
+      await page.waitForFunction(() => {
+        const mirror = document.querySelector('[data-yinkesi-view-switch]')
+        return (mirror?.querySelectorAll('[role="tab"]').length ?? 0) >= 2
+      }, null, { timeout: 5_000 })
+      return state.selectedText
+    }
+  }
+  return null
+}
+
+async function restoreSessionSelection(page, selectedText) {
+  if (!selectedText) return
+  const rows = page.locator('[data-slot="sidebar"] [role="treeitem"]')
+  const count = await rows.count()
+  for (let index = 0; index < count; index += 1) {
+    if (((await rows.nth(index).textContent()) ?? '').trim() === selectedText) {
+      await rows.nth(index).click()
+      return
+    }
+  }
+}
+
 async function verifyReducedMotion(page) {
   await page.setViewportSize({ width: 1680, height: 1000 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -237,7 +284,7 @@ async function verifyLightOnlyPalette(page) {
   })
   assert.equal(result.darkMediaMatches, true, 'Chromium did not emulate a dark system preference')
   assert.equal(result.app.toUpperCase(), '#FAF9F7', 'Dark system preference changed the warm app surface')
-  assert.match(result.gradient, /#FFFEFA|rgb\(255,\s*254,\s*250\)/i)
+  assert.match(result.gradient, /#FFFFFF|rgb\(255,\s*255,\s*255\)/i)
   assert.equal(result.keyword.toUpperCase(), '#D6336C')
   assert.equal(result.punctuation.toUpperCase(), '#495057')
   await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' })
@@ -276,6 +323,12 @@ async function inspectYinkesiDom(page) {
     const sidebarStyle = sidebar ? getComputedStyle(sidebar) : null
     const whaleStyle = whale ? getComputedStyle(whale) : null
     const firstTreeItemStyle = treeItems[0] ? getComputedStyle(treeItems[0]) : null
+    const appFrame = document.querySelector('[data-slot="root"] > :first-child')
+    const switcher = document.querySelector('[data-yinkesi-view-switch]')
+    const sourceWordmark = document.querySelector('[data-slot="sidebar"] > :first-child > :first-child > button:first-of-type')
+    const appStyle = appFrame ? getComputedStyle(appFrame) : null
+    const switchStyle = switcher ? getComputedStyle(switcher) : null
+    const customizeStyle = customize ? getComputedStyle(customize) : null
     const tokenHost = [document.documentElement, document.body, ...document.querySelectorAll('*')]
       .find((node) => getComputedStyle(node).getPropertyValue('--dsw-alias-bg-base').trim())
     const tokenStyle = tokenHost ? getComputedStyle(tokenHost) : null
@@ -322,6 +375,16 @@ async function inspectYinkesiDom(page) {
           try { return ['http:', 'https:'].includes(new URL(value).protocol) && new URL(value).origin !== location.origin }
           catch { return false }
         }),
+      typography: {
+        family: appStyle?.fontFamily ?? null,
+        letterSpacing: appStyle?.letterSpacing ?? null,
+      },
+      compactSidebar: {
+        switchHeight: switchStyle?.height ?? null,
+        customizeMinHeight: customizeStyle?.minHeight ?? null,
+        treeMinHeight: firstTreeItemStyle?.minHeight ?? null,
+        wordmarkDisplay: sourceWordmark ? getComputedStyle(sourceWordmark).display : null,
+      },
     }
   }, styleSelector)
 }
@@ -394,7 +457,7 @@ try {
 
   await page.waitForSelector('[data-slot="root"]', { state: 'attached', timeout: bootTimeoutMs })
   await page.waitForSelector(styleSelector, { state: 'attached', timeout: bootTimeoutMs })
-  await page.waitForFunction(() => document.documentElement.getAttribute('data-yinkesi-compatible') === 'rc5', null, { timeout: bootTimeoutMs })
+  await page.waitForFunction(() => document.documentElement.getAttribute('data-yinkesi-compatible') === 'web-v1', null, { timeout: bootTimeoutMs })
   await page.waitForTimeout(250)
 
   if (process.env.YINKESI_DISMISS_FIRST_RUN === '1') {
@@ -409,12 +472,12 @@ try {
   assert.ok(pluginResponses.some((entry) => entry.status >= 200 && entry.status < 400), 'The dsh-yinkesi client bundle was not served successfully')
 
   const dom = await inspectYinkesiDom(page)
-  assert.equal(dom.compatible, 'rc5', 'Yinkesi did not enter the guarded rc.5 layout mode')
+  assert.equal(dom.compatible, 'web-v1', 'Yinkesi did not enter the guarded web-v1 layout mode')
   assert.ok(dom.styleLength > 1_000, 'Yinkesi runtime stylesheet is missing or unexpectedly small')
   assert.equal(dom.styleContainsExternalUrl, false, 'Yinkesi CSS contains an external HTTP URL')
-  assert.equal(dom.tokens.app.toUpperCase(), '#FAF9F7', 'Warm app token was not applied')
-  assert.equal(dom.tokens.content.toUpperCase(), '#FFFEFA', 'Warm content token was not applied')
-  assert.equal(dom.tokens.brand.toUpperCase(), '#4D6BFE', 'DeepSeek blue token was not applied')
+  assert.equal(dom.tokens.app.toUpperCase(), '#FFFFFF', 'app token did not resolve to white')
+  assert.equal(dom.tokens.content.toUpperCase(), '#FFFFFF', 'content token did not resolve to white')
+  assert.equal(dom.tokens.brand.toUpperCase(), '#4D6BFE', 'DeepSeek blue changed')
   assert.ok(dom.sidebar, 'First-party sidebar remained unavailable')
   assert.notEqual(dom.sidebar.borderRadius, '0px', 'Sidebar is not independently rounded')
   assert.ok(dom.brandText.includes('DeepSeek Harness'), 'DeepSeek Harness identity row is missing')
@@ -426,9 +489,19 @@ try {
     `Blue whale has no visible fill (${JSON.stringify({ whale: dom.whale, tokenHost: dom.tokenHost, tokens: dom.tokens })})`,
   )
   assert.deepEqual(dom.externalOwnedUrls, [], `Yinkesi-owned DOM contains external URLs: ${dom.externalOwnedUrls.join(', ')}`)
+  assert.doesNotMatch(dom.typography.family ?? '', /Segoe UI Variable/i)
+  assert.match(dom.typography.family ?? '', /Helvetica Neue|Arial|Microsoft YaHei UI/i)
+  assert.ok(['normal', '0px'].includes(dom.typography.letterSpacing), `unexpected tracking: ${dom.typography.letterSpacing}`)
+  assert.equal(dom.compactSidebar.switchHeight, '44px')
+  assert.equal(dom.compactSidebar.customizeMinHeight, '36px')
+  assert.equal(dom.compactSidebar.treeMinHeight, '28px')
+  assert.equal(dom.compactSidebar.wordmarkDisplay, 'none')
 
   const customize = await verifyCustomizeProxy(page)
+  let savedSelection = null
+  if (verifyExistingSession) savedSelection = await openExistingSessionView(page)
   const views = await verifyConversationTrajectoryRoundTrip(page)
+  if (savedSelection) await restoreSessionSelection(page, savedSelection)
   const screenshots = await captureScreenshots(page)
   const reducedMotion = await verifyReducedMotion(page)
   const lightOnlyPalette = await verifyLightOnlyPalette(page)
