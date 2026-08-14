@@ -96,6 +96,8 @@ This is a deliberate graceful-degradation contract.
 
 Exact values live in one token module; components must not hard-code theme colors.
 
+Yinkesi is intentionally light-only in its first release. While the plugin is active, both underlying Harness color-scheme branches receive the same warm-light semantic palette; no separate theme toggle is added. Unloading Yinkesi restores the user's previous Harness theme behavior.
+
 ### 5.2 Typography
 
 - Use the local system UI stack; do not download fonts.
@@ -111,6 +113,12 @@ Exact values live in one token module; components must not hard-code theme color
 - Floating controls use light translucency and blur only when they overlap content.
 - Scroll edges use a soft fade instead of a permanent heavy divider.
 - Shadows communicate hierarchy; they are not decorative glows.
+
+### 5.4 Language and identity
+
+- Existing DeepSeek Harness labels continue to come from the active Harness locale.
+- New Yinkesi-only accessible labels are supplied in Simplified Chinese and English through the existing locale service; UI text is not hard-coded into layout components.
+- The whale asset is derived from the official local Harness favicon and recolored through `currentColor`, so the shape remains official while its blue treatment stays token-controlled.
 
 ## 6. Layout and Components
 
