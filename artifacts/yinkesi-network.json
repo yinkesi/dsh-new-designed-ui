@@ -1,0 +1,506 @@
+[
+  {
+    "method": "GET",
+    "type": "document",
+    "url": "http://127.0.0.1:3080/",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/assets/index-Dqw48FrP.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/assets/vendor-Cjbwl5VI.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "stylesheet",
+    "url": "http://127.0.0.1:3080/assets/vendor-CjyC-hUb.css",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "stylesheet",
+    "url": "http://127.0.0.1:3080/assets/index-CSGf6Qzd.css",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-typert-registry/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-api-gateway/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-hmr/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-connection/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-api-remotes/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-runtime/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-theme/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-locale/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-session-log-export/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-cordis-client-runner/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-layout/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-sidebar/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-settings/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-settings-general/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-settings-models/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-settings-plugin-inventory/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-conversation/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-tool/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-cordis/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-workflow-run/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-deliverables/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-workspace/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-input-trigger/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-commands/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-skill/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-subagent/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-jobs/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-goal/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-message-feedback/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-model-selection/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-permission-presets/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-agent-preset/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-settings-plugins/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-plan/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-user-questions/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-trajectory/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/dsh-yinkesi/client.js",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "script",
+    "url": "http://127.0.0.1:3080/plugins/@deepseek-ai/dsh-client-ui-directory-picker-native/client.js",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/host.describe",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "eventsource",
+    "url": "http://127.0.0.1:3080/plugins/events",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/syncInspectManifest",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/inventory",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/credentials.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/agentPreset.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/session.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/workspace.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/inventory",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/agentPreset.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/syncInspectManifest",
+    "external": false
+  },
+  {
+    "method": "GET",
+    "type": "other",
+    "url": "http://127.0.0.1:3080/favicon.svg",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/credentials.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/credentials.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/subagent.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/session.history",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/inventory",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/skill.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/commands/list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/session.models",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/llm.providers",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/credentials.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/agentPreset.list",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  }
+]
