@@ -1,6 +1,7 @@
 'use strict'
 
-const COMPATIBILITY_WARNING = '[Yinkesi] DeepSeek Harness rc.5 layout was not recognized; using safe theme-only mode.'
+const COMPATIBILITY_WARNING = '[Yinkesi] Supported DeepSeek Harness web layout was not recognized; using safe theme-only mode.'
+const COMPATIBILITY_MARKER = 'web-v1'
 const NARROW_QUERY = '(max-width: 720px)'
 
 function noop() {}
@@ -232,7 +233,7 @@ function installRc5Adapter(options = {}) {
   }
 
   function markCompatible(active) {
-    if (active) setAttribute(document.documentElement, 'data-yinkesi-compatible', 'rc5')
+    if (active) setAttribute(document.documentElement, 'data-yinkesi-compatible', COMPATIBILITY_MARKER)
     else restoreAttribute(document.documentElement, 'data-yinkesi-compatible', compatibilityBefore)
   }
 
@@ -490,6 +491,7 @@ function installRc5Adapter(options = {}) {
 }
 
 module.exports = {
+  COMPATIBILITY_MARKER,
   COMPATIBILITY_WARNING,
   detectRc5Layout,
   installRc5Adapter,

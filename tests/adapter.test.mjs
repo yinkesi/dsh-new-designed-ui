@@ -270,6 +270,7 @@ test('adapter mirrors official tabs, proxies actions, tracks locale, and support
   FakeMutationObserver.instances[0].trigger()
   assert.equal(findOwned(customize, 'data-yinkesi-customize-label').textContent, '自定义')
   assert.deepEqual(warnings, [])
+  assert.equal(f.document.documentElement.getAttribute('data-yinkesi-compatible'), 'web-v1')
 
   dispose()
   assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-view-switch'), null)

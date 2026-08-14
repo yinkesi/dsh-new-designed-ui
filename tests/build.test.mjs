@@ -34,7 +34,10 @@ test('build emits a deterministic, self-contained DSH client module', async () =
   assert.match(source, /data:image\/svg\+xml/)
   assert.match(source, /scale\(\.98\)/)
   assert.match(source, /transition-duration:\s*1ms/)
+  assert.match(source, /web-v1/)
+  assert.doesNotMatch(source, /compatible=.?rc5|data-yinkesi-compatible[^\n]+rc5/)
   assert.doesNotMatch(source, /__YINKESI_[A-Z0-9_]+__/)
+  assert.doesNotMatch(source, /__YINKESI_[A-Z_]+__/)
   assert.doesNotMatch(source, /\brequire\(["']\.\.?\//)
 
   let registration
