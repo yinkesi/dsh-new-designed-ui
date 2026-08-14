@@ -188,10 +188,7 @@ async function openExistingSessionView(page) {
     const mirror = document.querySelector('[data-yinkesi-view-switch]')
     if (mirror && mirror.querySelectorAll('[role="tab"]').length >= 2) return { ready: true }
     const selected = document.querySelector('[data-slot="sidebar"] [role="treeitem"][aria-selected="true"], [data-slot="sidebar"] [role="treeitem"][aria-current="true"]')
-    const rows = Array.from(document.querySelectorAll('[data-slot="sidebar"] [role="treeitem"]'))
-    const target = rows.find((node) => node !== selected
-      && node.getAttribute('aria-selected') !== 'true'
-      && node.getAttribute('aria-current') !== 'true')
+    const target = document.querySelector('[data-slot="sidebar"] [role="treeitem"][aria-selected="false"]')
     const textOf = (node) => (node?.textContent ?? '').trim() || (node?.getAttribute?.('aria-label') ?? '').trim()
     return {
       ready: false,
@@ -202,19 +199,12 @@ async function openExistingSessionView(page) {
 
   if (state.ready || !state.targetText) return null
 
-  const rows = page.locator('[data-slot="sidebar"] [role="treeitem"]')
-  const count = await rows.count()
-  for (let index = 0; index < count; index += 1) {
-    if (((await rows.nth(index).textContent()) ?? '').trim() === state.targetText) {
-      await rows.nth(index).click()
-      await page.waitForFunction(() => {
-        const mirror = document.querySelector('[data-yinkesi-view-switch]')
-        return (mirror?.querySelectorAll('[role="tab"]').length ?? 0) >= 2
-      }, null, { timeout: 5_000 })
-      return state.selectedText
-    }
-  }
-  return null
+  await page.locator('[data-slot="sidebar"] [role="treeitem"][aria-selected="false"]').first().click()
+  await page.waitForFunction(() => {
+    const mirror = document.querySelector('[data-yinkesi-view-switch]')
+    return (mirror?.querySelectorAll('[role="tab"]').length ?? 0) >= 2
+  }, null, { timeout: 10_000 })
+  return state.selectedText
 }
 
 async function restoreSessionSelection(page, selectedText) {
@@ -471,6 +461,9 @@ try {
   assert.equal(pluginRequestFailures.length, 0, `Yinkesi client request failed:\n${pluginRequestFailures.join('\n')}`)
   assert.ok(pluginResponses.some((entry) => entry.status >= 200 && entry.status < 400), 'The dsh-yinkesi client bundle was not served successfully')
 
+  let savedSelection = null
+  if (verifyExistingSession) savedSelection = await openExistingSessionView(page)
+
   const dom = await inspectYinkesiDom(page)
   assert.equal(dom.compatible, 'web-v1', 'Yinkesi did not enter the guarded web-v1 layout mode')
   assert.ok(dom.styleLength > 1_000, 'Yinkesi runtime stylesheet is missing or unexpectedly small')
@@ -504,8 +497,6 @@ try {
   }
 
   const customize = await verifyCustomizeProxy(page)
-  let savedSelection = null
-  if (verifyExistingSession) savedSelection = await openExistingSessionView(page)
   const views = await verifyConversationTrajectoryRoundTrip(page)
   if (savedSelection) await restoreSessionSelection(page, savedSelection)
   const screenshots = await captureScreenshots(page)
