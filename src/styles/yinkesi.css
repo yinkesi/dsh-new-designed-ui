@@ -1,0 +1,580 @@
+/*
+ * Yinkesi is a presentation layer for the rc.5 DOM contract. Every deep rule
+ * is guarded by the adapter marker so an unknown Harness build keeps only the
+ * official theme-token override and all first-party controls remain visible.
+ */
+
+html[data-yinkesi-compatible="rc5"] {
+  --yinkesi-app-surface: var(--dsw-alias-bg-base);
+  --yinkesi-content-surface: var(--dsw-alias-bg-layer-1);
+  --yinkesi-sidebar-surface: var(--dsw-specific-sidebar-fill);
+  --yinkesi-raised-surface: var(--dsw-alias-bg-layer-3);
+  --yinkesi-hairline: var(--dsw-alias-border-l2);
+  --yinkesi-strong-hairline: var(--dsw-alias-border-l3);
+  --yinkesi-whale-blue: var(--dsw-alias-brand-primary);
+  --yinkesi-focus: var(--dsw-alias-brand-primary);
+  --yinkesi-radius-sidebar: 1.125rem;
+  --yinkesi-radius-panel: 1rem;
+  --yinkesi-radius-control: 0.625rem;
+  --yinkesi-motion-press: 70ms;
+  --yinkesi-motion-hover: 140ms;
+  --yinkesi-motion-panel: 340ms;
+  --yinkesi-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --yinkesi-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  color-scheme: light;
+}
+
+/* App frame: paper behind three restrained, inset work surfaces. */
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child {
+  box-sizing: border-box;
+  background: var(--yinkesi-app-surface);
+  color: var(--dsw-alias-label-primary);
+  font-family: var(--dsw-font-family);
+  letter-spacing: -0.006em;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child > :first-child {
+  box-sizing: border-box;
+  padding: 0.625rem 0 0.625rem 0.625rem;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child > :nth-child(2) {
+  min-width: 0;
+  margin: 0.625rem;
+  overflow: hidden;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: var(--yinkesi-radius-sidebar);
+  background: var(--yinkesi-content-surface);
+  box-shadow: var(--dsw-shadow-lv1);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child:not([data-details-collapsed]) > :nth-child(3) {
+  margin: 0.625rem 0.625rem 0.625rem 0;
+  overflow: hidden;
+  border: 1px solid var(--yinkesi-hairline);
+  border-radius: var(--yinkesi-radius-sidebar);
+  background: var(--yinkesi-content-surface);
+  box-shadow: var(--dsw-shadow-lv1);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child[data-details-collapsed] > :nth-child(3) {
+  margin: 0;
+  border: 0;
+}
+
+/* Sidebar shell and Claude-like hierarchy. */
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: var(--yinkesi-radius-sidebar);
+  background: var(--yinkesi-sidebar-surface);
+  box-shadow: var(--dsw-shadow-lv1);
+  font-size: 0.875rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child > :first-child {
+  min-height: 2.5rem;
+  margin: 0 0 0.25rem;
+  padding-inline: 0.25rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child > button,
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-customize] {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 2.25rem;
+  margin: 0.0625rem 0;
+  padding: 0.4375rem 0.625rem;
+  border: 0;
+  border-radius: var(--yinkesi-radius-control);
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--yinkesi-motion-press) var(--yinkesi-standard), opacity var(--yinkesi-motion-hover) var(--yinkesi-standard);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child > button:hover,
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-customize]:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child > button:active,
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-customize]:active,
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch] button:active {
+  transform: scale(.98);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-customize-icon] {
+  display: grid;
+  place-items: center;
+  flex: 0 0 1.125rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 0.875rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex: none;
+  gap: 0.1875rem;
+  width: 100%;
+  margin: 0 0 0.375rem;
+  padding: 0.1875rem;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 0.75rem;
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch] button {
+  min-width: 0;
+  height: 2rem;
+  overflow: hidden;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: 0.5625rem;
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform var(--yinkesi-motion-press) var(--yinkesi-standard), opacity var(--yinkesi-motion-hover) var(--yinkesi-standard);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch] button:hover {
+  color: var(--dsw-alias-label-primary);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch] [aria-selected="true"] {
+  background: var(--dsw-alias-button-elevated-fill);
+  box-shadow: var(--dsw-shadow-lv1);
+  color: var(--dsw-alias-label-primary);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-source-tabs] {
+  display: none !important; /* Adapter-only: the enabled mirror owns this exact visibility state. */
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child:has(> [data-yinkesi-customize]) [data-slot="sidebar.settings"] {
+  display: none;
+}
+
+/* Dense recents: keep native tree semantics and actions, reduce only chrome. */
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="tree"] {
+  min-height: 0;
+  padding: 0.125rem 0.125rem 0.5rem 0;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--dsw-alias-scrollbar-bg-l2) transparent;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"] {
+  position: relative;
+  min-height: 2rem;
+  margin: 0.0625rem 0;
+  border-radius: 0.5625rem;
+  color: var(--dsw-alias-label-secondary);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"]::before {
+  position: absolute;
+  top: 50%;
+  left: 0.375rem;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border: 1px solid var(--dsw-alias-border-l4);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"] > button,
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"] > a {
+  box-sizing: border-box;
+  min-height: 2rem;
+  padding-block: 0.3125rem;
+  padding-left: 1.25rem;
+  border-radius: inherit;
+  color: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"]:hover {
+  background: var(--dsw-specific-sidebar-nav-item-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"][aria-selected="true"],
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"][aria-current="true"],
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"] [aria-selected="true"] {
+  background: var(--dsw-specific-sidebar-nav-item-active);
+  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"][aria-selected="true"]::before,
+html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] [role="treeitem"][aria-current="true"]::before {
+  border-color: var(--yinkesi-whale-blue);
+  background: var(--yinkesi-whale-blue);
+}
+
+/* Fixed identity row added after first-party footer seats. */
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-brand] {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 0.625rem;
+  min-height: 2.5rem;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.625rem 0.375rem;
+  border-top: 1px solid var(--dsw-alias-border-l1);
+  color: var(--dsw-alias-label-primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-yinkesi-whale] {
+  display: block;
+  flex: 0 0 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: var(--yinkesi-whale-blue);
+  mask-image: var(--yinkesi-whale-image, url("__YINKESI_WHALE_DATA_URI__"));
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: var(--yinkesi-whale-image, url("__YINKESI_WHALE_DATA_URI__"));
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+/* Conversation: calm readable measure with document-like assistant answers. */
+html[data-yinkesi-compatible="rc5"] [data-slot="conversation"] > :first-child {
+  --dsh-chat-content-width: 47.5rem;
+  background: var(--yinkesi-content-surface);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="conversation.session.header"] > header {
+  padding-top: 0.75rem;
+  background: color-mix(in srgb, var(--yinkesi-content-surface) 92%, transparent);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="conversation.session.header"] > header:has([data-yinkesi-source-tabs="hidden"]) {
+  padding-bottom: 0.5rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-conversation-scroll] {
+  background: var(--yinkesi-content-surface);
+  scrollbar-color: var(--dsw-alias-scrollbar-bg-l1) transparent;
+  scroll-behavior: smooth;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="assistant-step"] {
+  position: relative;
+  min-height: 1.75rem;
+  padding-left: 2.5rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="assistant-step"]::before {
+  position: absolute;
+  top: 0.0625rem;
+  left: 0;
+  width: 1.625rem;
+  height: 1.625rem;
+  background-color: var(--yinkesi-whale-blue);
+  content: '';
+  mask-image: url("__YINKESI_WHALE_DATA_URI__");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-image: url("__YINKESI_WHALE_DATA_URI__");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  pointer-events: none;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="user"],
+html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="steering"] {
+  border-radius: 1.375rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="tool-call"] > *,
+html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="command"] > *,
+html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="context"] > * {
+  box-sizing: border-box;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 0.75rem;
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-composer-seat] {
+  padding-top: 0.375rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-composer-seat] button,
+html[data-yinkesi-compatible="rc5"] [role="toolbar"] button {
+  transform-origin: center;
+  transition: scale var(--yinkesi-motion-press) var(--yinkesi-standard), opacity var(--yinkesi-motion-hover) var(--yinkesi-standard);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-composer-seat] button:active:not(:disabled),
+html[data-yinkesi-compatible="rc5"] [role="toolbar"] button:active:not(:disabled) {
+  scale: .98;
+}
+
+/* Trajectory remains the first-party ledger; only its materials are changed. */
+html[data-yinkesi-compatible="rc5"] [data-conversation-composer-overlay] {
+  background: var(--yinkesi-content-surface);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-conversation-composer-overlay] [role="toolbar"] {
+  margin: 0.5rem 0.75rem;
+  padding: 0.375rem;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 0.75rem;
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-conversation-composer-overlay] [role="toolbar"] [aria-pressed="true"],
+html[data-yinkesi-compatible="rc5"] [data-conversation-composer-overlay] [role="toolbar"] [aria-checked="true"] {
+  background: var(--dsw-specific-sidebar-nav-item-active);
+  color: var(--dsw-alias-label-primary);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] {
+  padding: 0 0.75rem 0.75rem;
+  scrollbar-color: var(--dsw-alias-scrollbar-bg-l1) transparent;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] table {
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 0.75rem;
+  background: var(--yinkesi-content-surface);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] thead {
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] tr[data-selected="true"] td,
+html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] tr[aria-selected="true"] td {
+  background: var(--dsw-specific-sidebar-nav-item-active-accent);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] tr[data-error="true"] td {
+  background: var(--dsw-alias-interactive-bg-hover-danger);
+}
+
+html[data-yinkesi-compatible="rc5"] section[aria-label="Trajectory timeline"] {
+  margin-inline: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 0.75rem;
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+html[data-yinkesi-compatible="rc5"] [data-timeline-span][data-current="true"] {
+  outline: 2px solid var(--yinkesi-whale-blue);
+  outline-offset: 1px;
+}
+
+html[data-yinkesi-compatible="rc5"] [aria-label="Event details"] {
+  border-left-color: var(--yinkesi-hairline);
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+/* Focus and scrollbar polish use semantics, never generated class names. */
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] :where(
+  button,
+  a,
+  input,
+  textarea,
+  select,
+  [role="button"],
+  [role="tab"],
+  [role="treeitem"]
+):focus-visible {
+  outline: 2px solid var(--yinkesi-focus);
+  outline-offset: 2px;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] :where(
+  [role="tree"],
+  [data-conversation-scroll],
+  [data-trajectory-scroll],
+  [data-summary-scroll-region]
+)::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] :where(
+  [role="tree"],
+  [data-conversation-scroll],
+  [data-trajectory-scroll],
+  [data-summary-scroll-region]
+)::-webkit-scrollbar-thumb {
+  border: 0.125rem solid transparent;
+  border-radius: 999px;
+  background: var(--dsw-alias-scrollbar-bg-l1);
+  background-clip: padding-box;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] :where(
+  [role="tree"],
+  [data-conversation-scroll],
+  [data-trajectory-scroll],
+  [data-summary-scroll-region]
+)::-webkit-scrollbar-thumb:hover {
+  background: var(--dsw-alias-scrollbar-hover-l1);
+  background-clip: padding-box;
+}
+
+/* Pointer-tracked Harness geometry must stay attached to the pointer. */
+html[data-yinkesi-compatible="rc5"] [data-dragging="true"] {
+  transition: none;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-dragging="true"] *,
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > [data-dragging] * {
+  transition: none;
+}
+
+/* The rc.5 adapter removes mirror controls before rail mode; these are guards. */
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > [data-sidebar-collapsed] > :first-child {
+  padding-left: 0.375rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > [data-sidebar-collapsed] [data-slot="sidebar"] > :first-child {
+  padding: 0.75rem 0.4375rem 0.375rem;
+}
+
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > [data-sidebar-collapsed] [data-yinkesi-view-switch],
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > [data-sidebar-collapsed] [data-yinkesi-customize],
+html[data-yinkesi-compatible="rc5"] [data-slot="root"] > [data-sidebar-collapsed] [data-yinkesi-brand] {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child > :nth-child(2) {
+    margin: 0.375rem;
+    border-radius: 0.875rem;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-slot="conversation"] > :first-child {
+    --dsh-chat-content-width: 43rem;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="assistant-step"] {
+    padding-left: 2.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child > :nth-child(2) {
+    margin: 0;
+    border-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-slot="conversation"] > :first-child {
+    --dsh-chat-content-width: 100%;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="assistant-step"] {
+    padding-left: 2rem;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="assistant-step"]::before {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] {
+    padding-inline: 0.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-yinkesi-compatible="rc5"] [data-conversation-scroll] {
+    scroll-behavior: auto;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-yinkesi-owned],
+  html[data-yinkesi-compatible="rc5"] [data-yinkesi-owned] *,
+  html[data-yinkesi-compatible="rc5"] [data-composer-seat] button,
+  html[data-yinkesi-compatible="rc5"] [role="toolbar"] button {
+    animation: none;
+    transition-property: opacity;
+    transition-duration: 1ms;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-yinkesi-compatible="rc5"] [data-slot="conversation.session.header"] > header,
+  html[data-yinkesi-compatible="rc5"] [data-composer-seat],
+  html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch] {
+    background: var(--yinkesi-content-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child,
+  html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child > :nth-child(2),
+  html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch],
+  html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] table {
+    border-color: var(--dsw-alias-border-l4);
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-slot="root"] :focus-visible {
+    outline-width: 3px;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-yinkesi-compatible="rc5"] [data-slot="sidebar"] > :first-child,
+  html[data-yinkesi-compatible="rc5"] [data-slot="root"] > :first-child > :nth-child(2),
+  html[data-yinkesi-compatible="rc5"] [data-yinkesi-view-switch],
+  html[data-yinkesi-compatible="rc5"] [data-trajectory-scroll] table {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-yinkesi-whale],
+  html[data-yinkesi-compatible="rc5"] [data-chat-flow-kind="assistant-step"]::before {
+    background-color: LinkText;
+    forced-color-adjust: auto;
+  }
+
+  html[data-yinkesi-compatible="rc5"] [data-slot="root"] :focus-visible {
+    outline-color: Highlight;
+  }
+}

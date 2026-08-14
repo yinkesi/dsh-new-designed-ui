@@ -1,0 +1,16 @@
+{
+  "duration": {
+    "press": "70ms",
+    "hover": "140ms",
+    "panel": "340ms",
+    "reduced": "1ms"
+  },
+  "easing": {
+    "spring": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "standard": "cubic-bezier(0.2, 0.8, 0.2, 1)"
+  },
+  "scale": {
+    "press": 0.98,
+    "hover": 1
+  }
+}
