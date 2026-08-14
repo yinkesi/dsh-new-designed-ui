@@ -42,18 +42,18 @@ test('skin uses stable Harness anchors and covers the approved surfaces', async 
   assert.match(css, /:focus-visible/)
   assert.match(css, /scale\(__YINKESI_SCALE_PRESS__\)/)
   assert.match(css, /\[data-dragging="true"\][^{]*\{[^}]*transition:\s*none/s)
-  assert.match(css, /html\[data-yinkesi-compatible="rc5"\]\s+body\s*\{/)
+  assert.match(css, /html\[data-yinkesi-compatible="web-v1"\]\s+body\s*\{/)
   assert.match(css, /\[data-slot="root"\]\s*>\s*:first-child\s*>\s*:first-child\s*\{[^}]*overflow:\s*hidden/s)
   assert.match(css, /--yinkesi-motion-press:\s*__YINKESI_MOTION_PRESS__/)
   assert.match(css, /transition-duration:\s*__YINKESI_MOTION_REDUCED__/)
   assert.doesNotMatch(css, /\[data-slot="sidebar\.settings"\][^{]*\{[^}]*display:\s*none/s)
 })
 
-test('light-only skin pins rc.5 gradient and syntax variables outside ThemeRuntime', async () => {
+test('light-only skin pins web-v1 gradient and syntax variables outside ThemeRuntime', async () => {
   const css = await read('../src/styles/yinkesi.css')
 
-  assert.match(css, /--dsw-linear-gradient-think:\s*linear-gradient\([^;]+#FFFEFA/i)
-  assert.match(css, /--dsw-linear-think-select:\s*linear-gradient\([^;]+#F7F6F3/i)
+  assert.match(css, /--dsw-linear-gradient-think:\s*linear-gradient\([^;]+#FFFFFF/i)
+  assert.match(css, /--dsw-linear-think-select:\s*linear-gradient\([^;]+#F7F7F5/i)
   for (const token of [
     '--shiki-token-constant',
     '--shiki-token-string',
@@ -80,12 +80,32 @@ test('skin has resilient motion, transparency, contrast, and responsive fallback
   assert.match(css, /@media\s*\(max-width:\s*640px\)/)
 })
 
+test('compact white sidebar follows the approved Claude reference rhythm', async () => {
+  const css = await read('../src/styles/yinkesi.css')
+
+  assert.match(css, /--yinkesi-sidebar-padding:\s*0\.75rem/)
+  assert.match(css, /--yinkesi-sidebar-row-height:\s*2\.25rem/)
+  assert.match(css, /--yinkesi-sidebar-tree-height:\s*1\.75rem/)
+  assert.match(css, /--yinkesi-sidebar-segment-height:\s*2\.75rem/)
+  assert.match(css, /--yinkesi-sidebar-radius:\s*1rem/)
+  assert.match(css, /\[data-yinkesi-view-switch\][^{]*\{[^}]*height:\s*var\(--yinkesi-sidebar-segment-height\)/s)
+  assert.match(css, /\[data-yinkesi-customize\][^{]*\{[^}]*min-height:\s*var\(--yinkesi-sidebar-row-height\)/s)
+  assert.match(css, /\[role="treeitem"\][^{]*\{[^}]*min-height:\s*var\(--yinkesi-sidebar-tree-height\)/s)
+  assert.match(css, /button:first-of-type[^{]*\{[^}]*display:\s*none/s)
+  assert.match(css, /font-size:\s*0\.875rem/)
+  assert.match(css, /letter-spacing:\s*0(?:px|em)?;/)
+  assert.doesNotMatch(css, /letter-spacing:\s*-0\.006em/)
+})
+
 test('skin is local, selector-stable, and keeps visibility force narrowly scoped', async () => {
   const css = await read('../src/styles/yinkesi.css')
 
   assert.doesNotMatch(css, /@import\b|(?:https?:)?\/\//i)
   assert.doesNotMatch(css, /\.[A-Za-z][\w-]*_[A-Za-z0-9_-]{5,}/, 'must not depend on generated CSS-module names')
   assert.doesNotMatch(css, /\[class(?:\^|\*|\$)?=/, 'must not infer generated classes')
+  assert.doesNotMatch(css, /\.[A-Za-z0-9_-]{6,}_[A-Za-z0-9_-]+/)
+  assert.doesNotMatch(css, /overflow:\s*visible/)
+  assert.match(css, /html\[data-yinkesi-compatible="web-v1"\]/)
 
   const importantLines = css.split(/\r?\n/).filter(line => line.includes('!important'))
   assert.deepEqual(importantLines, ['  display: none !important; /* Adapter-only: the enabled mirror owns this exact visibility state. */'])
