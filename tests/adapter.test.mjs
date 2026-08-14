@@ -138,7 +138,8 @@ function fixture() {
   FakeMutationObserver.instances.length = 0
   FakeResizeObserver.instances.length = 0
   const document = new FakeDocument()
-  const frame = element(document, 'main', { 'data-sidebar-collapsed': 'false' })
+  const rootSlot = element(document, 'div', { 'data-slot': 'root' })
+  const frame = element(document, 'main')
   const sidebarSlot = element(document, 'div', { 'data-slot': 'sidebar' })
   const sidebarRoot = element(document, 'aside')
   const logo = element(document, 'div', {}, 'DeepSeek Harness')
@@ -153,7 +154,8 @@ function fixture() {
   const conversation = element(document, 'button', { role: 'tab', 'aria-selected': 'true' }, 'Conversation')
   const trajectory = element(document, 'button', { role: 'tab', 'aria-selected': 'false' }, 'Trajectory')
 
-  document.body.appendChild(frame)
+  document.body.appendChild(rootSlot)
+  rootSlot.appendChild(frame)
   frame.appendChild(sidebarSlot)
   sidebarSlot.appendChild(sidebarRoot)
   sidebarRoot.appendChild(logo)
@@ -188,7 +190,7 @@ test('detectRc5Layout uses only stable slots and ARIA roles', () => {
   const { detectRc5Layout } = require('../src/client/compat/rc5-adapter.cjs')
   const f = fixture()
   for (const [selector, node] of [
-    ['[data-sidebar-collapsed]', f.layout.frame],
+    ['[data-slot="root"]', f.layout.frame.parentElement],
     ['[data-slot="sidebar"]', f.layout.sidebarSlot],
     ['[data-slot="sidebar.workspaces"]', f.layout.workspaceSlot],
     ['[data-slot="sidebar.settings"]', f.layout.settingsSlot],

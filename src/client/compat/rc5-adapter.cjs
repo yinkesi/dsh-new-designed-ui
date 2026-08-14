@@ -29,7 +29,9 @@ function textOf(node) {
 
 function detectRc5Layout(document) {
   if (!document || typeof document.querySelector !== 'function') return null
-  const frame = document.querySelector('[data-sidebar-collapsed]')
+  const rootSlot = document.querySelector('[data-slot="root"]')
+  const frame = rootSlot?.firstElementChild
+    ?? document.querySelector('[data-sidebar-collapsed]')
   const sidebarSlot = document.querySelector('[data-slot="sidebar"]')
   const sidebarRoot = sidebarSlot?.firstElementChild ?? null
   const workspaceSlot = document.querySelector('[data-slot="sidebar.workspaces"]')
