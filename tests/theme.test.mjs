@@ -56,16 +56,26 @@ test('theme tokens are one flat, complete, locally-resolved warm palette', async
   }
 })
 
-test('palette keeps Yinkesi warm while retaining DeepSeek identity and state contrast', async () => {
+test('palette keeps Yinkesi white while retaining DeepSeek identity and state contrast', async () => {
   const tokens = await readJson('../src/theme/tokens.json')
 
-  assert.equal(tokens['--dsw-alias-bg-base'], '#FAF9F7')
-  assert.equal(tokens['--dsw-alias-bg-layer-1'], '#FFFEFA')
-  assert.equal(tokens['--dsw-specific-sidebar-fill'], '#F7F6F3')
-  assert.equal(tokens['--dsw-alias-label-primary'], '#2F2C29')
-  assert.equal(tokens['--dsw-alias-label-secondary'], '#77716B')
+  assert.equal(tokens['--dsw-alias-bg-base'], '#FFFFFF')
+  assert.equal(tokens['--dsw-alias-bg-layer-1'], '#FFFFFF')
+  assert.equal(tokens['--dsw-specific-sidebar-fill'], '#FFFFFF')
+  assert.equal(tokens['--dsw-alias-bg-layer-2'], '#F5F5F3')
+  assert.equal(tokens['--dsw-specific-sidebar-nav-item-hover'], '#F7F7F5')
+  assert.equal(tokens['--dsw-specific-sidebar-nav-item-active'], '#F0F0EE')
+  assert.equal(tokens['--dsw-alias-label-primary'], '#2D2D2A')
+  assert.equal(tokens['--dsw-alias-label-secondary'], '#6F6F6A')
+  assert.equal(tokens['--dsw-alias-label-tertiary'], '#92928C')
+  assert.equal(
+    tokens['--dsw-font-family'],
+    '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Microsoft YaHei UI", "Microsoft YaHei", sans-serif',
+  )
+  assert.doesNotMatch(JSON.stringify(tokens), /#FAF9F7|#FFFEFA|#F7F6F3|#CC785C/i)
+  assert.doesNotMatch(tokens['--dsw-font-family'], /Segoe UI Variable/i)
   assert.equal(tokens['--dsw-alias-brand-primary'], '#4D6BFE')
-  assert.equal(tokens['--dsw-alias-button-primary-fill'], '#CC785C')
+  assert.equal(tokens['--dsw-alias-button-primary-fill'], '#4D6BFE')
   assert.notEqual(tokens['--dsw-alias-state-error-primary'], tokens['--dsw-alias-state-success-primary'])
 
   const overrides = Object.fromEntries(

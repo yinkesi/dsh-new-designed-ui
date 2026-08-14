@@ -98,7 +98,7 @@ window.__ModuleLoader__.load({
       tokens: ${JSON.stringify(tokenData)},
       motion: ${JSON.stringify(motionData)},
       whaleDataUri: ${JSON.stringify(whaleDataUri)},
-      packageVersion: "0.1.0"
+      packageVersion: "0.2.0"
     });
   }
 });
