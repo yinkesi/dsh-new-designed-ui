@@ -1,0 +1,47 @@
+{
+  "name": "dsh-yinkesi",
+  "version": "0.1.0",
+  "description": "A removable Claude-inspired warm UI skin for DeepSeek Harness Web.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "build": "node scripts/build.mjs",
+    "audit": "node scripts/audit-package.mjs",
+    "verify:bundle": "node --test tests/build.test.mjs",
+    "pack:local": "pnpm run build && pnpm run audit && pnpm pack --pack-destination dist"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-theme"
+      ],
+      "platform": "web"
+    }
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "ui",
+    "theme"
+  ],
+  "license": "MIT"
+}
