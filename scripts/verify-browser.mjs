@@ -77,10 +77,10 @@ async function waitForOriginalTab(page, index) {
   }, index, { timeout: 5_000 })
 }
 
-async function verifyCustomizeProxy(page) {
+async function verifyBrandSettingsProxy(page) {
   const availability = await page.evaluate(() => {
     const source = document.querySelector('[data-slot="sidebar.settings"] button')
-    const proxy = document.querySelector('[data-yinkesi-customize]')
+    const proxy = document.querySelector('[data-yinkesi-brand]')
     if (!source || !proxy) return { available: false }
 
     window.__yinkesiSettingsProxyClicks = 0
@@ -89,7 +89,7 @@ async function verifyCustomizeProxy(page) {
     }, { capture: true, once: true })
     return {
       available: true,
-      disabled: Boolean(proxy.disabled),
+      disabled: proxy.getAttribute('aria-disabled') === 'true',
       label: proxy.textContent?.trim() || proxy.getAttribute('aria-label') || '',
       pointerActionable: (() => {
         const rect = proxy.getBoundingClientRect()
@@ -99,8 +99,8 @@ async function verifyCustomizeProxy(page) {
     }
   })
 
-  assert.equal(availability.available, true, 'Yinkesi Customize proxy was not mounted')
-  assert.equal(availability.disabled, false, 'Yinkesi Customize proxy is unexpectedly disabled')
+  assert.equal(availability.available, true, 'Yinkesi brand settings trigger was not mounted')
+  assert.equal(availability.disabled, false, 'Yinkesi brand settings trigger is unexpectedly disabled')
 
   const modalSelector = '[role="dialog"], [role="presentation"]'
   const visibleModalCount = () => page.locator(modalSelector).evaluateAll((nodes) => nodes.filter((node) => {
@@ -109,12 +109,12 @@ async function verifyCustomizeProxy(page) {
     return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0
   }).length)
   const modalsBefore = await visibleModalCount()
-  const proxy = page.locator('[data-yinkesi-customize]')
+  const proxy = page.locator('[data-yinkesi-brand]')
   await proxy.evaluate((node) => node.click())
   await page.waitForFunction(() => window.__yinkesiSettingsProxyClicks === 1, null, { timeout: 3_000 })
   await page.waitForTimeout(100)
   const modalsAfter = await visibleModalCount()
-  assert.ok(modalsAfter > modalsBefore, 'Customize proxy did not reveal the first-party Settings panel')
+  assert.ok(modalsAfter > modalsBefore, 'Brand settings trigger did not reveal the first-party Settings panel')
   if (modalsAfter > modalsBefore) await page.keyboard.press('Escape')
 
   return {
@@ -227,7 +227,7 @@ async function verifyReducedMotion(page) {
   const result = await page.evaluate(() => {
     const candidate = document.querySelector([
       '[data-yinkesi-view-switch] button',
-      '[data-yinkesi-customize]',
+      '[data-yinkesi-brand]',
       '[data-composer-seat] button',
     ].join(','))
     if (!candidate) return { matches: matchMedia('(prefers-reduced-motion: reduce)').matches, found: false }
@@ -292,7 +292,7 @@ async function captureScreenshots(page) {
   for (const [name, width, height] of targets) {
     await page.setViewportSize({ width, height })
     await page.waitForTimeout(150)
-    const path = join(artifactsRoot, `yinkesi-020-${name}.png`)
+    const path = join(artifactsRoot, `yinkesi-030-${name}.png`)
     await page.screenshot({ path, fullPage: false, animations: 'disabled' })
     output[name] = { width, height, path }
   }
@@ -305,7 +305,6 @@ async function inspectYinkesiDom(page) {
     const style = document.querySelector(selector)
     const sidebar = document.querySelector('[data-slot="sidebar"] > :first-child')
     const brand = document.querySelector('[data-yinkesi-brand]')
-    const customize = document.querySelector('[data-yinkesi-customize]')
     const settings = document.querySelector('[data-slot="sidebar.settings"]')
     const settingsButton = settings?.querySelector('button') ?? null
     const whale = document.querySelector('[data-yinkesi-whale]')
@@ -318,7 +317,7 @@ async function inspectYinkesiDom(page) {
     const sourceWordmark = document.querySelector('[data-slot="sidebar"] > :first-child > :first-child > button:first-of-type')
     const appStyle = appFrame ? getComputedStyle(appFrame) : null
     const switchStyle = switcher ? getComputedStyle(switcher) : null
-    const customizeStyle = customize ? getComputedStyle(customize) : null
+    const brandStyle = brand ? getComputedStyle(brand) : null
     const tokenHost = [document.documentElement, document.body, ...document.querySelectorAll('*')]
       .find((node) => getComputedStyle(node).getPropertyValue('--dsw-alias-bg-base').trim())
     const tokenStyle = tokenHost ? getComputedStyle(tokenHost) : null
@@ -338,15 +337,10 @@ async function inspectYinkesiDom(page) {
         backgroundColor: sidebarStyle.backgroundColor,
       } : null,
       brandText: brand?.textContent?.trim() ?? '',
-      customizeText: customize?.textContent?.trim() ?? '',
       settings: settings ? {
         display: getComputedStyle(settings).display,
         triggerDisplay: settingsButton ? getComputedStyle(settingsButton).display : null,
         triggerMarker: settingsButton?.getAttribute('data-yinkesi-source-settings') ?? null,
-        customizeIsSibling: settings.parentElement === customize?.parentElement,
-        hideSelectorMatches: Boolean(document.querySelector(
-          '[data-slot="sidebar"] > :first-child:has(> [data-yinkesi-customize]) [data-slot="sidebar.settings"]',
-        )),
       } : null,
       whale: whale ? {
         backgroundColor: whaleStyle.backgroundColor,
@@ -371,7 +365,7 @@ async function inspectYinkesiDom(page) {
       },
       compactSidebar: {
         switchHeight: switchStyle?.height ?? null,
-        customizeMinHeight: customizeStyle?.minHeight ?? null,
+        brandMinHeight: brandStyle?.minHeight ?? null,
         treeMinHeight: firstTreeItemStyle?.minHeight ?? null,
         wordmarkDisplay: sourceWordmark ? getComputedStyle(sourceWordmark).display : null,
       },
@@ -474,7 +468,6 @@ try {
   assert.ok(dom.sidebar, 'First-party sidebar remained unavailable')
   assert.notEqual(dom.sidebar.borderRadius, '0px', 'Sidebar is not independently rounded')
   assert.ok(dom.brandText.includes('DeepSeek Harness'), 'DeepSeek Harness identity row is missing')
-  assert.ok(dom.customizeText.length > 0, 'Customize action is missing')
   assert.ok(dom.whale?.maskImage?.includes('data:image/svg+xml'), 'Embedded whale mask is missing')
   assert.notEqual(
     dom.whale?.backgroundColor,
@@ -486,7 +479,7 @@ try {
   assert.match(dom.typography.family ?? '', /Helvetica Neue|Arial|Microsoft YaHei UI/i)
   assert.ok(['normal', '0px'].includes(dom.typography.letterSpacing), `unexpected tracking: ${dom.typography.letterSpacing}`)
   assert.equal(dom.compactSidebar.wordmarkDisplay, 'none')
-  assert.equal(dom.compactSidebar.customizeMinHeight, '36px')
+  assert.equal(dom.compactSidebar.brandMinHeight, '32px')
   // The Conversation/Trajectory mirror and the session tree mount only once an
   // active session exists; on a fresh profile there is nothing to measure.
   if (dom.compactSidebar.switchHeight !== null) {
@@ -496,7 +489,7 @@ try {
     assert.equal(dom.compactSidebar.treeMinHeight, '28px')
   }
 
-  const customize = await verifyCustomizeProxy(page)
+  const settings = await verifyBrandSettingsProxy(page)
   const views = await verifyConversationTrajectoryRoundTrip(page)
   if (savedSelection) await restoreSessionSelection(page, savedSelection)
   const screenshots = await captureScreenshots(page)
@@ -514,7 +507,7 @@ try {
     chromiumExecutable,
     clientResponses: pluginResponses,
     dom,
-    customize,
+    settings,
     views,
     reducedMotion,
     lightOnlyPalette,

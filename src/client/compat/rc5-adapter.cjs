@@ -89,12 +89,6 @@ function isCompleteLayout(layout) {
   )
 }
 
-function topLevelChild(node, root) {
-  let current = node
-  while (current?.parentElement && current.parentElement !== root) current = current.parentElement
-  return current?.parentElement === root ? current : null
-}
-
 function removeNode(node) {
   node?.remove?.()
 }
@@ -110,12 +104,12 @@ function appendWhale(document, parent, whaleDataUri) {
   return whale
 }
 
-function customizeLabel(document, sourceButton) {
+function settingsHint(document, sourceButton) {
   const lang = String(document?.documentElement?.getAttribute?.('lang') ?? '').toLowerCase()
   const source = textOf(sourceButton) || String(sourceButton?.getAttribute?.('aria-label') ?? '').trim()
-  if (lang.startsWith('zh')) return '自定义'
-  if (lang.startsWith('en') || /^(settings?|customi[sz]e)$/i.test(source)) return 'Customize'
-  return source || 'Customize'
+  if (lang.startsWith('zh')) return '设置'
+  if (lang.startsWith('en') || /^(settings?|preferences?)$/i.test(source)) return 'Settings'
+  return source || 'Settings'
 }
 
 function isCollapsedOrNarrow(layout, media) {
@@ -156,8 +150,7 @@ function installRc5Adapter(options = {}) {
   let warningShown = false
   let warningTimer = null
   let mirrorState = null
-  let customizeState = null
-  let brandNode = null
+  let brandState = null
   let hiddenSource = null
 
   function showWarning() {
@@ -212,24 +205,22 @@ function installRc5Adapter(options = {}) {
     restoreSourceTabs()
   }
 
-  function removeCustomize() {
-    if (!customizeState) return
+  function removeBrand() {
+    if (!brandState) return
     restoreAttribute(
-      customizeState.sourceButton,
+      brandState.sourceButton,
       'data-yinkesi-source-settings',
-      customizeState.sourceMarker,
+      brandState.sourceMarker,
     )
-    restoreAttribute(customizeState.sourceButton, 'aria-hidden', customizeState.sourceAriaHidden)
-    restoreAttribute(customizeState.sourceButton, 'tabindex', customizeState.sourceTabindex)
-    removeNode(customizeState.node)
-    customizeState = null
+    restoreAttribute(brandState.sourceButton, 'aria-hidden', brandState.sourceAriaHidden)
+    restoreAttribute(brandState.sourceButton, 'tabindex', brandState.sourceTabindex)
+    removeNode(brandState.node)
+    brandState = null
   }
 
   function removeAdditions() {
     removeMirror()
-    removeCustomize()
-    removeNode(brandNode)
-    brandNode = null
+    removeBrand()
   }
 
   function markCompatible(active) {
@@ -340,30 +331,38 @@ function installRc5Adapter(options = {}) {
     return true
   }
 
-  function ensureCustomize(layout) {
+  function ensureBrand(layout) {
     const sourceButton = layout.settingsButton
-    if (!customizeState || customizeState.sourceButton !== sourceButton || customizeState.node.parentElement !== layout.sidebarRoot) {
-      removeCustomize()
-      const node = document.createElement('button')
-      node.setAttribute('type', 'button')
+    if (!brandState || brandState.sourceButton !== sourceButton || brandState.node.parentElement !== layout.sidebarRoot) {
+      removeBrand()
+      const node = document.createElement('div')
       node.setAttribute('data-yinkesi-owned', 'true')
-      node.setAttribute('data-yinkesi-customize', '')
-      const icon = document.createElement('span')
-      icon.setAttribute('data-yinkesi-customize-icon', '')
-      icon.setAttribute('aria-hidden', 'true')
-      icon.textContent = '✦'
+      node.setAttribute('data-yinkesi-brand', '')
+      node.setAttribute('role', 'button')
+      node.setAttribute('tabindex', '0')
+      node.setAttribute('aria-label', 'DeepSeek Harness')
+      appendWhale(document, node, options.whaleDataUri)
       const label = document.createElement('span')
-      label.setAttribute('data-yinkesi-customize-label', '')
-      node.appendChild(icon)
+      label.setAttribute('data-yinkesi-brand-label', '')
+      label.textContent = 'DeepSeek Harness'
       node.appendChild(label)
+      const gear = document.createElement('span')
+      gear.setAttribute('data-yinkesi-brand-gear', '')
+      gear.setAttribute('aria-hidden', 'true')
+      gear.textContent = '⚙'
+      node.appendChild(gear)
       node.addEventListener('click', () => {
         if (!sourceButton.disabled && !sourceButton.hasAttribute?.('disabled')) sourceButton.click?.()
       })
-      const region = topLevelChild(layout.workspaceSlot, layout.sidebarRoot)
-      layout.sidebarRoot.insertBefore(node, region)
-      customizeState = {
+      node.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault?.()
+          node.click()
+        }
+      })
+      layout.sidebarRoot.appendChild(node)
+      brandState = {
         node,
-        label,
         sourceButton,
         sourceMarker: readAttribute(sourceButton, 'data-yinkesi-source-settings'),
         sourceAriaHidden: readAttribute(sourceButton, 'aria-hidden'),
@@ -371,34 +370,18 @@ function installRc5Adapter(options = {}) {
       }
     }
 
-    const label = customizeLabel(document, sourceButton)
-    if (customizeState.label.textContent !== label) customizeState.label.textContent = label
-    setAttribute(customizeState.node, 'aria-label', label)
+    setAttribute(brandState.node, 'title', settingsHint(document, sourceButton))
     for (const attribute of ['aria-haspopup', 'aria-expanded', 'aria-controls']) {
       const value = sourceButton.getAttribute?.(attribute)
-      if (value === null || value === undefined) customizeState.node.removeAttribute(attribute)
-      else setAttribute(customizeState.node, attribute, value)
+      if (value === null || value === undefined) brandState.node.removeAttribute(attribute)
+      else setAttribute(brandState.node, attribute, value)
     }
     const disabled = Boolean(sourceButton.disabled || sourceButton.hasAttribute?.('disabled'))
-    if (customizeState.node.disabled !== disabled) customizeState.node.disabled = disabled
+    if (disabled) brandState.node.setAttribute('aria-disabled', 'true')
+    else brandState.node.removeAttribute('aria-disabled')
     setAttribute(sourceButton, 'data-yinkesi-source-settings', 'hidden')
     setAttribute(sourceButton, 'aria-hidden', 'true')
     setAttribute(sourceButton, 'tabindex', '-1')
-  }
-
-  function ensureBrand(layout) {
-    if (brandNode?.parentElement === layout.sidebarRoot) return
-    removeNode(brandNode)
-    brandNode = document.createElement('div')
-    brandNode.setAttribute('data-yinkesi-owned', 'true')
-    brandNode.setAttribute('data-yinkesi-brand', '')
-    brandNode.setAttribute('aria-label', 'DeepSeek Harness')
-    appendWhale(document, brandNode, options.whaleDataUri)
-    const label = document.createElement('span')
-    label.setAttribute('data-yinkesi-brand-label', '')
-    label.textContent = 'DeepSeek Harness'
-    brandNode.appendChild(label)
-    layout.sidebarRoot.appendChild(brandNode)
   }
 
   function sync() {
@@ -431,7 +414,6 @@ function installRc5Adapter(options = {}) {
       scheduleWarning()
       return
     }
-    ensureCustomize(layout)
     ensureBrand(layout)
   }
 

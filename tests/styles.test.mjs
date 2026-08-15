@@ -28,8 +28,8 @@ test('skin uses stable Harness anchors and covers the approved surfaces', async 
     '[data-composer-seat]',
     '[data-chat-flow-kind="assistant-step"]',
     '[data-yinkesi-view-switch]',
-    '[data-yinkesi-customize]',
     '[data-yinkesi-brand]',
+    '[data-yinkesi-brand-gear]',
     '[data-yinkesi-source-tabs]',
     '[data-yinkesi-source-settings="hidden"]',
   ]
@@ -89,7 +89,7 @@ test('compact white sidebar follows the approved Claude reference rhythm', async
   assert.match(css, /--yinkesi-sidebar-segment-height:\s*2\.75rem/)
   assert.match(css, /--yinkesi-sidebar-radius:\s*1rem/)
   assert.match(css, /\[data-yinkesi-view-switch\][^{]*\{[^}]*height:\s*var\(--yinkesi-sidebar-segment-height\)/s)
-  assert.match(css, /\[data-yinkesi-customize\][^{]*\{[^}]*min-height:\s*var\(--yinkesi-sidebar-row-height\)/s)
+  assert.match(css, /\[data-yinkesi-brand\][^{]*\{[^}]*cursor:\s*pointer/s)
   assert.match(css, /\[role="treeitem"\][^{]*\{[^}]*min-height:\s*var\(--yinkesi-sidebar-tree-height\)/s)
   assert.match(css, /button:first-of-type[^{]*\{[^}]*display:\s*none/s)
   assert.match(css, /font-size:\s*0\.875rem/)
