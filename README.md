@@ -1,6 +1,6 @@
 # Yinkesi
 
-Yinkesi (`dsh-yinkesi`) is a removable presentation plugin for DeepSeek Harness Web. It keeps the DeepSeek Harness name and all official behavior while applying a compact, white, Claude-inspired sidebar hierarchy, an asset-free cross-platform font stack, a blue DeepSeek whale identity, and restrained interaction polish.
+Yinkesi (`dsh-yinkesi`) is a removable presentation plugin for DeepSeek Harness Web. It keeps the DeepSeek Harness name and all official behavior while applying a compact, white, Claude-inspired sidebar hierarchy, an asset-free cross-platform font stack, a blue DeepSeek whale identity, and restrained interaction polish. The bottom DeepSeek Harness whale-and-name row doubles as the Settings trigger: clicking it opens the official Settings panel.
 
 ## Boundary
 
@@ -30,7 +30,7 @@ Install the prebuilt archive with the official profile command:
 
 ```powershell
 $env:DSH_HOME = 'C:\path\to\dsh-home'
-pnpm dsh plugin --profile web add 'C:\path\to\dsh-yinkesi-0.2.0.tgz'
+pnpm dsh plugin --profile web add 'C:\path\to\dsh-yinkesi-0.3.0.tgz'
 ```
 
 Remove Yinkesi and return to the untouched official interface:
