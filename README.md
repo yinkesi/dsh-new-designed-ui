@@ -18,7 +18,7 @@ The interface chrome uses a system sans stack:
 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Microsoft YaHei UI", "Microsoft YaHei", sans-serif
 ```
 
-Conversation text uses a bundled open-source serif (Newsreader, SIL OFL) to approximate Claude's reading serif, with Georgia and Songti/STSong as fallbacks. No Anthropic proprietary font is bundled or fetched. Global letter spacing is neutral (`0`).
+Conversation text uses a bundled open-source serif (Newsreader, SIL OFL) to approximate Claude's reading serif, with Georgia and Noto Serif SC / Songti for Chinese. The interface sans stack prefers Noto Sans SC before Microsoft YaHei. No Anthropic proprietary font is bundled or fetched. Global letter spacing is neutral (`0`).
 
 ## Compatibility
 

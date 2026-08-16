@@ -70,7 +70,7 @@ test('palette keeps Yinkesi white while retaining DeepSeek identity and state co
   assert.equal(tokens['--dsw-alias-label-tertiary'], '#92928C')
   assert.equal(
     tokens['--dsw-font-family'],
-    '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Microsoft YaHei UI", "Microsoft YaHei", sans-serif',
+    '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif',
   )
   assert.doesNotMatch(JSON.stringify(tokens), /#FAF9F7|#FFFEFA|#F7F6F3|#CC785C/i)
   assert.doesNotMatch(tokens['--dsw-font-family'], /Segoe UI Variable/i)

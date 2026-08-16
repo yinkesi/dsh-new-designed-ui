@@ -22,7 +22,7 @@ html[data-yinkesi-compatible="web-v1"] body {
   --yinkesi-strong-hairline: var(--dsw-alias-border-l3);
   --yinkesi-whale-blue: var(--dsw-alias-brand-primary);
   --yinkesi-focus: var(--dsw-alias-brand-primary);
-  --yinkesi-font-serif: "Yinkesi Serif", Georgia, "Songti SC", "STSong", "SimSun", serif;
+  --yinkesi-font-serif: "Yinkesi Serif", Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", serif;
   --yinkesi-radius-sidebar: 1.125rem;
   --yinkesi-radius-panel: 1rem;
   --yinkesi-radius-control: 0.625rem;
