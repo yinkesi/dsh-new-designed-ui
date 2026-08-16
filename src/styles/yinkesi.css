@@ -21,10 +21,8 @@ html[data-yinkesi-compatible="web-v1"] body {
   --yinkesi-sidebar-padding: 0.75rem;
   --yinkesi-sidebar-row-height: 2.25rem;
   --yinkesi-sidebar-tree-height: 1.75rem;
-  --yinkesi-sidebar-segment-height: 2.75rem;
   --yinkesi-sidebar-radius: 1rem;
   --yinkesi-control-radius: 0.5rem;
-  --yinkesi-segment-radius: 0.75rem;
   --yinkesi-motion-press: __YINKESI_MOTION_PRESS__;
   --yinkesi-motion-hover: __YINKESI_MOTION_HOVER__;
   --yinkesi-motion-panel: __YINKESI_MOTION_PANEL__;
@@ -169,60 +167,8 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child > bu
   background: var(--dsw-alias-interactive-bg-hover);
 }
 
-html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child > button:active,
-html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch] button:active {
+html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child > button:active {
   transform: scale(__YINKESI_SCALE_PRESS__);
-}
-
-html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch] {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  flex: none;
-  gap: 0.1875rem;
-  width: 100%;
-  height: var(--yinkesi-sidebar-segment-height);
-  margin: 0 0 0.5rem;
-  padding: 0.1875rem;
-  border: 0;
-  border-radius: var(--yinkesi-segment-radius);
-  background: #F5F5F3;
-  box-shadow: none;
-}
-
-html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch] button {
-  min-width: 0;
-  height: 100%;
-  overflow: hidden;
-  padding: 0 0.625rem;
-  border: 1px solid transparent;
-  border-radius: 0.625rem;
-  background: transparent;
-  color: var(--dsw-alias-label-secondary);
-  font: inherit;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.25rem;
-  letter-spacing: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: transform var(--yinkesi-motion-press) var(--yinkesi-standard), opacity var(--yinkesi-motion-hover) var(--yinkesi-standard);
-}
-
-html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch] button:hover {
-  color: var(--dsw-alias-label-primary);
-}
-
-html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch] [aria-selected="true"] {
-  border-color: var(--yinkesi-hairline);
-  background: #FFFFFF;
-  box-shadow: 0 1px 2px rgb(32 32 30 / 6%);
-  color: var(--dsw-alias-label-primary);
-  font-weight: 500;
-}
-
-html[data-yinkesi-compatible="web-v1"] [data-yinkesi-source-tabs] {
-  display: none !important; /* Adapter-only: the enabled mirror owns this exact visibility state. */
 }
 
 html[data-yinkesi-compatible="web-v1"] button[data-yinkesi-source-settings="hidden"] {
@@ -360,10 +306,6 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="conversation"] > :first-child
 html[data-yinkesi-compatible="web-v1"] [data-slot="conversation.session.header"] > header {
   padding-top: 0.75rem;
   background: color-mix(in srgb, var(--yinkesi-content-surface) 92%, transparent);
-}
-
-html[data-yinkesi-compatible="web-v1"] [data-slot="conversation.session.header"] > header:has([data-yinkesi-source-tabs="hidden"]) {
-  padding-bottom: 0.5rem;
 }
 
 html[data-yinkesi-compatible="web-v1"] [data-conversation-scroll] {
@@ -557,7 +499,6 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > [data-sidebar-collap
   padding: 0.75rem 0.4375rem 0.375rem;
 }
 
-html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > [data-sidebar-collapsed] [data-yinkesi-view-switch],
 html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > [data-sidebar-collapsed] [data-yinkesi-brand] {
   display: none;
 }
@@ -621,8 +562,7 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > [data-sidebar-collap
 
 @media (prefers-reduced-transparency: reduce) {
   html[data-yinkesi-compatible="web-v1"] [data-slot="conversation.session.header"] > header,
-  html[data-yinkesi-compatible="web-v1"] [data-composer-seat],
-  html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch] {
+  html[data-yinkesi-compatible="web-v1"] [data-composer-seat] {
     background: var(--yinkesi-content-surface);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -632,7 +572,6 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > [data-sidebar-collap
 @media (prefers-contrast: more) {
   html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child,
   html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > :first-child > :nth-child(2),
-  html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch],
   html[data-yinkesi-compatible="web-v1"] [data-trajectory-scroll] table {
     border-color: var(--dsw-alias-border-l4);
   }
@@ -645,7 +584,6 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > [data-sidebar-collap
 @media (forced-colors: active) {
   html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child,
   html[data-yinkesi-compatible="web-v1"] [data-slot="root"] > :first-child > :nth-child(2),
-  html[data-yinkesi-compatible="web-v1"] [data-yinkesi-view-switch],
   html[data-yinkesi-compatible="web-v1"] [data-trajectory-scroll] table {
     border-color: CanvasText;
     background: Canvas;

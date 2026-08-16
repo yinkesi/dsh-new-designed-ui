@@ -27,10 +27,8 @@ test('skin uses stable Harness anchors and covers the approved surfaces', async 
     '[data-conversation-scroll]',
     '[data-composer-seat]',
     '[data-chat-flow-kind="assistant-step"]',
-    '[data-yinkesi-view-switch]',
     '[data-yinkesi-brand]',
     '[data-yinkesi-brand-gear]',
-    '[data-yinkesi-source-tabs]',
     '[data-yinkesi-source-settings="hidden"]',
   ]
   for (const selector of selectors) assert.ok(css.includes(selector), `missing stable selector ${selector}`)
@@ -86,9 +84,7 @@ test('compact white sidebar follows the approved Claude reference rhythm', async
   assert.match(css, /--yinkesi-sidebar-padding:\s*0\.75rem/)
   assert.match(css, /--yinkesi-sidebar-row-height:\s*2\.25rem/)
   assert.match(css, /--yinkesi-sidebar-tree-height:\s*1\.75rem/)
-  assert.match(css, /--yinkesi-sidebar-segment-height:\s*2\.75rem/)
   assert.match(css, /--yinkesi-sidebar-radius:\s*1rem/)
-  assert.match(css, /\[data-yinkesi-view-switch\][^{]*\{[^}]*height:\s*var\(--yinkesi-sidebar-segment-height\)/s)
   assert.match(css, /\[data-yinkesi-brand\][^{]*\{[^}]*cursor:\s*pointer/s)
   assert.match(css, /\[role="treeitem"\][^{]*\{[^}]*min-height:\s*var\(--yinkesi-sidebar-tree-height\)/s)
   assert.match(css, /button:first-of-type[^{]*\{[^}]*display:\s*none/s)
@@ -108,7 +104,7 @@ test('skin is local, selector-stable, and keeps visibility force narrowly scoped
   assert.match(css, /html\[data-yinkesi-compatible="web-v1"\]/)
 
   const importantLines = css.split(/\r?\n/).filter(line => line.includes('!important'))
-  assert.deepEqual(importantLines, ['  display: none !important; /* Adapter-only: the enabled mirror owns this exact visibility state. */'])
+  assert.deepEqual(importantLines, [])
 
   for (const declaration of css.matchAll(/transition(?:-property)?:\s*([^;]+);/g)) {
     assert.doesNotMatch(declaration[1], /\ball\b|\bwidth\b|\bheight\b|\bleft\b|\bright\b|\btop\b|\bbottom\b/)

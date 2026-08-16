@@ -149,9 +149,7 @@ function installRc5Adapter(options = {}) {
   let scheduled = false
   let warningShown = false
   let warningTimer = null
-  let mirrorState = null
   let brandState = null
-  let hiddenSource = null
 
   function showWarning() {
     warningTimer = null
@@ -175,36 +173,6 @@ function installRc5Adapter(options = {}) {
     warningTimer = null
   }
 
-  function restoreSourceTabs() {
-    if (!hiddenSource) return
-    const { tablist, tablistMarker, ariaHidden, tabs } = hiddenSource
-    restoreAttribute(tablist, 'data-yinkesi-source-tabs', tablistMarker)
-    restoreAttribute(tablist, 'aria-hidden', ariaHidden)
-    for (const entry of tabs) restoreAttribute(entry.node, 'tabindex', entry.tabindex)
-    hiddenSource = null
-  }
-
-  function hideSourceTabs(tablist, tabs) {
-    if (hiddenSource?.tablist !== tablist || hiddenSource.tabs.some((entry, index) => entry.node !== tabs[index])) {
-      restoreSourceTabs()
-      hiddenSource = {
-        tablist,
-        tablistMarker: readAttribute(tablist, 'data-yinkesi-source-tabs'),
-        ariaHidden: readAttribute(tablist, 'aria-hidden'),
-        tabs: tabs.map((node) => ({ node, tabindex: readAttribute(node, 'tabindex') })),
-      }
-    }
-    setAttribute(tablist, 'data-yinkesi-source-tabs', 'hidden')
-    setAttribute(tablist, 'aria-hidden', 'true')
-    for (const tab of tabs) setAttribute(tab, 'tabindex', '-1')
-  }
-
-  function removeMirror() {
-    removeNode(mirrorState?.node)
-    mirrorState = null
-    restoreSourceTabs()
-  }
-
   function removeBrand() {
     if (!brandState) return
     restoreAttribute(
@@ -219,116 +187,12 @@ function installRc5Adapter(options = {}) {
   }
 
   function removeAdditions() {
-    removeMirror()
     removeBrand()
   }
 
   function markCompatible(active) {
     if (active) setAttribute(document.documentElement, 'data-yinkesi-compatible', COMPATIBILITY_MARKER)
     else restoreAttribute(document.documentElement, 'data-yinkesi-compatible', compatibilityBefore)
-  }
-
-  function tabSignature(tabs) {
-    return tabs.map((tab) => [
-      textOf(tab),
-      tab.getAttribute?.('aria-label') ?? '',
-      Boolean(tab.disabled || tab.hasAttribute?.('disabled')),
-    ].join('\u0000')).join('\u0001')
-  }
-
-  function sameSourceTabs(tabs) {
-    return Boolean(
-      mirrorState
-      && mirrorState.sourceTabs.length === tabs.length
-      && mirrorState.sourceTabs.every((tab, index) => tab === tabs[index]),
-    )
-  }
-
-  function activateMirrorIndex(index) {
-    const buttons = mirrorState?.buttons ?? []
-    if (buttons.length === 0) return
-    let cursor = ((index % buttons.length) + buttons.length) % buttons.length
-    for (let attempts = 0; attempts < buttons.length; attempts += 1) {
-      if (!buttons[cursor].disabled) {
-        buttons[cursor].focus?.()
-        buttons[cursor].click?.()
-        return
-      }
-      cursor = (cursor + 1) % buttons.length
-    }
-  }
-
-  function onMirrorKeydown(event, index) {
-    let target = null
-    if (event.key === 'ArrowLeft') target = index - 1
-    else if (event.key === 'ArrowRight') target = index + 1
-    else if (event.key === 'Home') target = 0
-    else if (event.key === 'End') target = (mirrorState?.buttons.length ?? 1) - 1
-    if (target === null) return
-    event.preventDefault?.()
-    activateMirrorIndex(target)
-  }
-
-  function createMirror(layout, tabs, signature) {
-    const node = document.createElement('div')
-    node.setAttribute('data-yinkesi-owned', 'true')
-    node.setAttribute('data-yinkesi-view-switch', '')
-    node.setAttribute('role', 'tablist')
-    const sourceLabel = layout.sourceTablist.getAttribute?.('aria-label')
-    node.setAttribute('aria-label', sourceLabel || 'Conversation views')
-
-    const buttons = tabs.map((source, index) => {
-      const button = document.createElement('button')
-      button.setAttribute('type', 'button')
-      button.setAttribute('role', 'tab')
-      button.setAttribute('data-yinkesi-view-tab', String(index))
-      button.textContent = textOf(source) || String(source.getAttribute?.('aria-label') ?? '')
-      button.addEventListener('click', () => {
-        if (!source.disabled && !source.hasAttribute?.('disabled')) source.click?.()
-      })
-      button.addEventListener('keydown', (event) => onMirrorKeydown(event, index))
-      node.appendChild(button)
-      return button
-    })
-
-    const reference = layout.sidebarRoot.firstElementChild?.nextSibling ?? null
-    layout.sidebarRoot.insertBefore(node, reference)
-    mirrorState = { node, buttons, sourceTabs: tabs.slice(), signature }
-  }
-
-  function syncMirror(layout) {
-    const tablist = layout.sourceTablist
-    const tabs = Array.from(layout.sourceTabs ?? [])
-    if (!tablist || tabs.length === 0) {
-      removeMirror()
-      return true
-    }
-    if (tabs.length < 2 || tabs.some((tab) => typeof tab?.click !== 'function')) {
-      removeMirror()
-      return false
-    }
-
-    const signature = tabSignature(tabs)
-    if (!mirrorState || mirrorState.signature !== signature || !sameSourceTabs(tabs)) {
-      removeMirror()
-      createMirror(layout, tabs, signature)
-    }
-
-    let selectedIndex = tabs.findIndex((tab) => tab.getAttribute?.('aria-selected') === 'true')
-    if (selectedIndex < 0) selectedIndex = 0
-    for (let index = 0; index < mirrorState.buttons.length; index += 1) {
-      const source = tabs[index]
-      const button = mirrorState.buttons[index]
-      const selected = index === selectedIndex
-      const label = textOf(source) || String(source.getAttribute?.('aria-label') ?? '')
-      if (button.textContent !== label) button.textContent = label
-      setAttribute(button, 'aria-selected', selected ? 'true' : 'false')
-      setAttribute(button, 'tabindex', selected ? '0' : '-1')
-      const disabled = Boolean(source.disabled || source.hasAttribute?.('disabled'))
-      if (button.disabled !== disabled) button.disabled = disabled
-    }
-    hideSourceTabs(tablist, tabs)
-    return true
   }
 
   function ensureBrand(layout) {
@@ -405,13 +269,6 @@ function installRc5Adapter(options = {}) {
     markCompatible(true)
     if (isCollapsedOrNarrow(layout, media)) {
       removeAdditions()
-      return
-    }
-
-    if (!syncMirror(layout)) {
-      removeAdditions()
-      markCompatible(false)
-      scheduleWarning()
       return
     }
     ensureBrand(layout)

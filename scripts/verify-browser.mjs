@@ -14,7 +14,6 @@ const artifactsRoot = join(projectRoot, 'artifacts')
 const baseUrl = new URL(process.env.YINKESI_BASE_URL || 'http://127.0.0.1:3181')
 const styleSelector = 'style[data-plugin="dsh-yinkesi"][data-yinkesi-style="runtime"]'
 const clientPath = '/plugins/dsh-yinkesi/client.js'
-const verifyExistingSession = process.env.YINKESI_VERIFY_EXISTING_SESSION === '1'
 const bootTimeoutMs = 30_000
 const chromiumExecutable = [
   process.env.YINKESI_CHROMIUM_PATH,
@@ -69,14 +68,6 @@ function unique(items) {
   return [...new Set(items)]
 }
 
-async function waitForOriginalTab(page, index) {
-  await page.waitForFunction((targetIndex) => {
-    const tablist = document.querySelector('[data-yinkesi-source-tabs]')
-    const tabs = Array.from(tablist?.querySelectorAll('[role="tab"]') ?? [])
-    return tabs[targetIndex]?.getAttribute('aria-selected') === 'true'
-  }, index, { timeout: 5_000 })
-}
-
 async function verifyBrandSettingsProxy(page) {
   const availability = await page.evaluate(() => {
     const source = document.querySelector('[data-slot="sidebar.settings"] button')
@@ -126,99 +117,6 @@ async function verifyBrandSettingsProxy(page) {
   }
 }
 
-async function verifyConversationTrajectoryRoundTrip(page) {
-  const state = await page.evaluate(() => {
-    const mirror = document.querySelector('[data-yinkesi-view-switch]')
-    const source = document.querySelector('[data-yinkesi-source-tabs]')
-    const mirrorTabs = Array.from(mirror?.querySelectorAll('[role="tab"]') ?? [])
-    const sourceTabs = Array.from(source?.querySelectorAll('[role="tab"]') ?? [])
-    return {
-      available: mirrorTabs.length >= 2 && mirrorTabs.length === sourceTabs.length,
-      labels: mirrorTabs.map((tab) => tab.textContent?.trim() || tab.getAttribute('aria-label') || ''),
-      disabled: mirrorTabs.map((tab) => Boolean(tab.disabled)),
-      originalIndex: sourceTabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true'),
-    }
-  })
-
-  if (!state.available) {
-    return { verified: false, reason: 'No active session exposes both first-party view tabs.' }
-  }
-
-  const conversationPattern = /conversation|chat|对话|会话/i
-  const trajectoryPattern = /trajectory|轨迹/i
-  let conversationIndex = state.labels.findIndex((label) => conversationPattern.test(label))
-  let trajectoryIndex = state.labels.findIndex((label) => trajectoryPattern.test(label))
-  if (conversationIndex < 0) conversationIndex = 0
-  if (trajectoryIndex < 0) trajectoryIndex = state.labels.findIndex((_, index) => index !== conversationIndex)
-
-  assert.notEqual(trajectoryIndex, conversationIndex, 'Conversation and Trajectory resolved to the same tab')
-  assert.equal(state.disabled[conversationIndex], false, 'Conversation tab is disabled')
-  assert.equal(state.disabled[trajectoryIndex], false, 'Trajectory tab is disabled')
-
-  const mirrorTabs = page.locator('[data-yinkesi-view-switch] [role="tab"]')
-  await mirrorTabs.nth(conversationIndex).click()
-  await waitForOriginalTab(page, conversationIndex)
-  await mirrorTabs.nth(trajectoryIndex).click()
-  await waitForOriginalTab(page, trajectoryIndex)
-
-  const trajectorySurfaceCount = await page.locator([
-    '[data-trajectory-scroll]',
-    'section[aria-label*="Trajectory" i]',
-    '[aria-label*="Event details" i]',
-  ].join(',')).count()
-
-  await mirrorTabs.nth(conversationIndex).click()
-  await waitForOriginalTab(page, conversationIndex)
-
-  if (state.originalIndex >= 0 && state.originalIndex !== conversationIndex) {
-    await mirrorTabs.nth(state.originalIndex).click()
-    await waitForOriginalTab(page, state.originalIndex)
-  }
-
-  return {
-    verified: true,
-    labels: state.labels,
-    firstPartyTrajectorySurfaces: trajectorySurfaceCount,
-    restoredOriginalSelection: state.originalIndex >= 0,
-  }
-}
-
-async function openExistingSessionView(page) {
-  const state = await page.evaluate(() => {
-    const mirror = document.querySelector('[data-yinkesi-view-switch]')
-    if (mirror && mirror.querySelectorAll('[role="tab"]').length >= 2) return { ready: true }
-    const selected = document.querySelector('[data-slot="sidebar"] [role="treeitem"][aria-selected="true"], [data-slot="sidebar"] [role="treeitem"][aria-current="true"]')
-    const target = document.querySelector('[data-slot="sidebar"] [role="treeitem"][aria-selected="false"]')
-    const textOf = (node) => (node?.textContent ?? '').trim() || (node?.getAttribute?.('aria-label') ?? '').trim()
-    return {
-      ready: false,
-      selectedText: textOf(selected),
-      targetText: textOf(target),
-    }
-  })
-
-  if (state.ready || !state.targetText) return null
-
-  await page.locator('[data-slot="sidebar"] [role="treeitem"][aria-selected="false"]').first().click()
-  await page.waitForFunction(() => {
-    const mirror = document.querySelector('[data-yinkesi-view-switch]')
-    return (mirror?.querySelectorAll('[role="tab"]').length ?? 0) >= 2
-  }, null, { timeout: 10_000 })
-  return state.selectedText
-}
-
-async function restoreSessionSelection(page, selectedText) {
-  if (!selectedText) return
-  const rows = page.locator('[data-slot="sidebar"] [role="treeitem"]')
-  const count = await rows.count()
-  for (let index = 0; index < count; index += 1) {
-    if (((await rows.nth(index).textContent()) ?? '').trim() === selectedText) {
-      await rows.nth(index).click()
-      return
-    }
-  }
-}
-
 async function verifyReducedMotion(page) {
   await page.setViewportSize({ width: 1680, height: 1000 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -226,7 +124,6 @@ async function verifyReducedMotion(page) {
 
   const result = await page.evaluate(() => {
     const candidate = document.querySelector([
-      '[data-yinkesi-view-switch] button',
       '[data-yinkesi-brand]',
       '[data-composer-seat] button',
     ].join(','))
@@ -292,7 +189,7 @@ async function captureScreenshots(page) {
   for (const [name, width, height] of targets) {
     await page.setViewportSize({ width, height })
     await page.waitForTimeout(150)
-    const path = join(artifactsRoot, `yinkesi-030-${name}.png`)
+    const path = join(artifactsRoot, `yinkesi-040-${name}.png`)
     await page.screenshot({ path, fullPage: false, animations: 'disabled' })
     output[name] = { width, height, path }
   }
@@ -313,10 +210,8 @@ async function inspectYinkesiDom(page) {
     const whaleStyle = whale ? getComputedStyle(whale) : null
     const firstTreeItemStyle = treeItems[0] ? getComputedStyle(treeItems[0]) : null
     const appFrame = document.querySelector('[data-slot="root"] > :first-child')
-    const switcher = document.querySelector('[data-yinkesi-view-switch]')
     const sourceWordmark = document.querySelector('[data-slot="sidebar"] > :first-child > :first-child > button:first-of-type')
     const appStyle = appFrame ? getComputedStyle(appFrame) : null
-    const switchStyle = switcher ? getComputedStyle(switcher) : null
     const brandStyle = brand ? getComputedStyle(brand) : null
     const tokenHost = [document.documentElement, document.body, ...document.querySelectorAll('*')]
       .find((node) => getComputedStyle(node).getPropertyValue('--dsw-alias-bg-base').trim())
@@ -364,7 +259,6 @@ async function inspectYinkesiDom(page) {
         letterSpacing: appStyle?.letterSpacing ?? null,
       },
       compactSidebar: {
-        switchHeight: switchStyle?.height ?? null,
         brandMinHeight: brandStyle?.minHeight ?? null,
         treeMinHeight: firstTreeItemStyle?.minHeight ?? null,
         wordmarkDisplay: sourceWordmark ? getComputedStyle(sourceWordmark).display : null,
@@ -455,9 +349,6 @@ try {
   assert.equal(pluginRequestFailures.length, 0, `Yinkesi client request failed:\n${pluginRequestFailures.join('\n')}`)
   assert.ok(pluginResponses.some((entry) => entry.status >= 200 && entry.status < 400), 'The dsh-yinkesi client bundle was not served successfully')
 
-  let savedSelection = null
-  if (verifyExistingSession) savedSelection = await openExistingSessionView(page)
-
   const dom = await inspectYinkesiDom(page)
   assert.equal(dom.compatible, 'web-v1', 'Yinkesi did not enter the guarded web-v1 layout mode')
   assert.ok(dom.styleLength > 1_000, 'Yinkesi runtime stylesheet is missing or unexpectedly small')
@@ -480,18 +371,13 @@ try {
   assert.ok(['normal', '0px'].includes(dom.typography.letterSpacing), `unexpected tracking: ${dom.typography.letterSpacing}`)
   assert.equal(dom.compactSidebar.wordmarkDisplay, 'none')
   assert.equal(dom.compactSidebar.brandMinHeight, '32px')
-  // The Conversation/Trajectory mirror and the session tree mount only once an
-  // active session exists; on a fresh profile there is nothing to measure.
-  if (dom.compactSidebar.switchHeight !== null) {
-    assert.equal(dom.compactSidebar.switchHeight, '44px')
-  }
+  // The session tree mounts only once an active session exists; on a fresh
+  // profile there is nothing to measure.
   if (dom.compactSidebar.treeMinHeight !== null) {
     assert.equal(dom.compactSidebar.treeMinHeight, '28px')
   }
 
   const settings = await verifyBrandSettingsProxy(page)
-  const views = await verifyConversationTrajectoryRoundTrip(page)
-  if (savedSelection) await restoreSessionSelection(page, savedSelection)
   const screenshots = await captureScreenshots(page)
   const reducedMotion = await verifyReducedMotion(page)
   const lightOnlyPalette = await verifyLightOnlyPalette(page)
@@ -508,7 +394,6 @@ try {
     clientResponses: pluginResponses,
     dom,
     settings,
-    views,
     reducedMotion,
     lightOnlyPalette,
     screenshots,

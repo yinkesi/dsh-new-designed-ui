@@ -204,17 +204,9 @@ test('detectRc5Layout uses only stable slots and ARIA roles', () => {
   assert.deepEqual(detectRc5Layout(f.document), f.layout)
 })
 
-test('adapter mirrors official tabs, proxies actions, tracks locale, and supports keyboard navigation', () => {
+test('brand opens official Settings, tracks locale, and is keyboard accessible', () => {
   const { installRc5Adapter } = require('../src/client/compat/rc5-adapter.cjs')
   const f = fixture()
-  f.conversation.addEventListener('click', () => {
-    f.conversation.setAttribute('aria-selected', 'true')
-    f.trajectory.setAttribute('aria-selected', 'false')
-  })
-  f.trajectory.addEventListener('click', () => {
-    f.conversation.setAttribute('aria-selected', 'false')
-    f.trajectory.setAttribute('aria-selected', 'true')
-  })
   const warnings = []
   const dispose = installRc5Adapter({
     document: f.document,
@@ -228,41 +220,28 @@ test('adapter mirrors official tabs, proxies actions, tracks locale, and support
     logger: { warn: (message) => warnings.push(message) },
   })
 
-  const mirror = findOwned(f.sidebarRoot, 'data-yinkesi-view-switch')
   const brand = findOwned(f.sidebarRoot, 'data-yinkesi-brand')
-  assert.ok(mirror)
   assert.ok(brand)
   assert.equal(findOwned(brand, 'data-yinkesi-brand-label').textContent, 'DeepSeek Harness')
-  assert.equal(f.sourceTablist.getAttribute('data-yinkesi-source-tabs'), 'hidden')
-  assert.equal(f.sourceTablist.getAttribute('aria-hidden'), 'true')
+  assert.equal(brand.getAttribute('role'), 'button')
+  assert.equal(brand.getAttribute('tabindex'), '0')
   assert.equal(f.settingsButton.getAttribute('data-yinkesi-source-settings'), 'hidden')
   assert.equal(f.settingsButton.getAttribute('aria-hidden'), 'true')
   assert.equal(f.settingsButton.getAttribute('tabindex'), '-1')
 
-  let mirrorTabs = mirror.querySelectorAll('[role="tab"]')
-  assert.deepEqual(mirrorTabs.map((tab) => tab.textContent), ['Conversation', 'Trajectory'])
-  assert.deepEqual(mirrorTabs.map((tab) => tab.getAttribute('aria-selected')), ['true', 'false'])
-  mirrorTabs[1].click()
-  FakeMutationObserver.instances[0].trigger()
-  mirrorTabs = mirror.querySelectorAll('[role="tab"]')
-  assert.equal(f.trajectory.clickCount, 1)
-  assert.deepEqual(mirrorTabs.map((tab) => tab.getAttribute('aria-selected')), ['false', 'true'])
-
-  const keyEvent = mirrorTabs[1].dispatch('keydown', { key: 'Home' })
-  assert.equal(keyEvent.defaultPrevented, true)
-  assert.equal(mirrorTabs[0].focusCount, 1)
-  assert.equal(f.conversation.clickCount, 1)
-
   brand.click()
   assert.equal(f.settingsButton.clickCount, 1)
-  assert.equal(findOwned(brand, 'data-yinkesi-brand-label').textContent, 'DeepSeek Harness')
-  assert.equal(brand.getAttribute('role'), 'button')
   assert.equal(brand.getAttribute('aria-haspopup'), 'dialog')
   assert.equal(brand.getAttribute('aria-expanded'), 'false')
   assert.equal(brand.getAttribute('aria-controls'), 'settings-dialog')
   f.settingsButton.setAttribute('aria-expanded', 'true')
   FakeMutationObserver.instances[0].trigger()
   assert.equal(brand.getAttribute('aria-expanded'), 'true')
+
+  const keyEvent = brand.dispatch('keydown', { key: 'Enter' })
+  assert.equal(keyEvent.defaultPrevented, true)
+  assert.equal(f.settingsButton.clickCount, 2)
+
   f.document.documentElement.setAttribute('lang', 'zh-CN')
   f.settingsButton.textContent = '设置'
   f.settingsButton.setAttribute('aria-label', '设置')
@@ -272,10 +251,7 @@ test('adapter mirrors official tabs, proxies actions, tracks locale, and support
   assert.equal(f.document.documentElement.getAttribute('data-yinkesi-compatible'), 'web-v1')
 
   dispose()
-  assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-view-switch'), null)
   assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-brand'), null)
-  assert.equal(f.sourceTablist.hasAttribute('data-yinkesi-source-tabs'), false)
-  assert.equal(f.sourceTablist.hasAttribute('aria-hidden'), false)
   assert.equal(f.settingsButton.hasAttribute('data-yinkesi-source-settings'), false)
   assert.equal(f.settingsButton.hasAttribute('aria-hidden'), false)
   assert.equal(f.settingsButton.hasAttribute('tabindex'), false)
@@ -296,21 +272,19 @@ test('collapse and narrow layouts restore official controls, then rebuild withou
     mismatchDelayMs: 0,
     logger: { warn() {} },
   })
-  assert.ok(findOwned(f.sidebarRoot, 'data-yinkesi-view-switch'))
+  assert.ok(findOwned(f.sidebarRoot, 'data-yinkesi-brand'))
 
   f.layout.frame.setAttribute('data-sidebar-collapsed', 'true')
   FakeMutationObserver.instances[0].trigger()
-  assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-view-switch'), null)
-  assert.equal(f.sourceTablist.hasAttribute('data-yinkesi-source-tabs'), false)
+  assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-brand'), null)
 
   f.layout.frame.setAttribute('data-sidebar-collapsed', 'false')
   FakeMutationObserver.instances[0].trigger()
-  assert.equal(walk(f.sidebarRoot).filter((node) => node.hasAttribute('data-yinkesi-view-switch')).length, 1)
+  assert.equal(walk(f.sidebarRoot).filter((node) => node.hasAttribute('data-yinkesi-brand')).length, 1)
 
   f.media.matches = true
   f.media.trigger()
-  assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-view-switch'), null)
-  assert.equal(f.sourceTablist.hasAttribute('aria-hidden'), false)
+  assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-brand'), null)
   dispose()
 })
 
@@ -332,9 +306,7 @@ test('incomplete rc.5 fixtures remain theme-only and warn at most once', () => {
   FakeMutationObserver.instances[0].trigger()
   assert.equal(warnings.length, 1)
   assert.match(warnings[0], /theme-only/i)
-  assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-view-switch'), null)
   assert.equal(findOwned(f.sidebarRoot, 'data-yinkesi-brand'), null)
-  assert.equal(f.sourceTablist.hasAttribute('data-yinkesi-source-tabs'), false)
   dispose()
 })
 
