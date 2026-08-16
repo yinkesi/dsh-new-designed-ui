@@ -1,6 +1,6 @@
 'use strict'
 
-const STYLE_SELECTOR = 'style[data-plugin="dsh-yinkesi"][data-yinkesi-style="runtime"]'
+const STYLE_SELECTOR = 'style[data-plugin="dsh-new-designed-ui"][data-yinkesi-style="runtime"]'
 const states = new WeakMap()
 let ownerSequence = 0
 
@@ -30,7 +30,7 @@ function installStyle(document, styleText) {
     const parent = document.head || document.documentElement || document.body
     if (!parent || typeof parent.appendChild !== 'function') return noop
     style = document.createElement('style')
-    style.setAttribute('data-plugin', 'dsh-yinkesi')
+    style.setAttribute('data-plugin', 'dsh-new-designed-ui')
     style.setAttribute('data-yinkesi-style', 'runtime')
     state = { created: true, originalText: '', owners: new Map() }
     states.set(style, state)

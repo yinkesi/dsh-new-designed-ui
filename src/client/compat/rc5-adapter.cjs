@@ -1,6 +1,6 @@
 'use strict'
 
-const COMPATIBILITY_WARNING = '[Yinkesi] Supported DeepSeek Harness web layout was not recognized; using safe theme-only mode.'
+const COMPATIBILITY_WARNING = '[New Designed UI] Supported DeepSeek Harness web layout was not recognized; using safe theme-only mode.'
 const COMPATIBILITY_MARKER = 'web-v1'
 const NARROW_QUERY = '(max-width: 720px)'
 

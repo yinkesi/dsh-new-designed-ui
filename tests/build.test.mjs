@@ -53,7 +53,7 @@ test('build emits a deterministic, self-contained DSH client module', async () =
     },
   }
   vm.runInNewContext(source, context, { filename: 'lib/client.js' })
-  assert.equal(registration.id, 'dsh-yinkesi')
+  assert.equal(registration.id, 'dsh-new-designed-ui')
 
   const plugin = registration.factory((specifier) => {
     throw new Error(`Unexpected external require: ${specifier}`)

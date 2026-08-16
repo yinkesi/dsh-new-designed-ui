@@ -15,8 +15,8 @@ const { chromium } = require(playwrightRoot)
 const projectRoot = dirname(fileURLToPath(new URL('../package.json', import.meta.url)))
 const artifactsRoot = join(projectRoot, 'artifacts')
 const baseUrl = new URL(process.env.YINKESI_BASE_URL || 'http://127.0.0.1:3181')
-const styleSelector = 'style[data-plugin="dsh-yinkesi"][data-yinkesi-style="runtime"]'
-const clientPath = '/plugins/dsh-yinkesi/client.js'
+const styleSelector = 'style[data-plugin="dsh-new-designed-ui"][data-yinkesi-style="runtime"]'
+const clientPath = '/plugins/dsh-new-designed-ui/client.js'
 const bootTimeoutMs = 30_000
 const chromiumExecutable = [
   process.env.YINKESI_CHROMIUM_PATH,
@@ -350,7 +350,7 @@ try {
   }
 
   assert.equal(pluginRequestFailures.length, 0, `Yinkesi client request failed:\n${pluginRequestFailures.join('\n')}`)
-  assert.ok(pluginResponses.some((entry) => entry.status >= 200 && entry.status < 400), 'The dsh-yinkesi client bundle was not served successfully')
+  assert.ok(pluginResponses.some((entry) => entry.status >= 200 && entry.status < 400), 'The dsh-new-designed-ui client bundle was not served successfully')
 
   const dom = await inspectYinkesiDom(page)
   assert.equal(dom.compatible, 'web-v1', 'Yinkesi did not enter the guarded web-v1 layout mode')

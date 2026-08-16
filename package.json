@@ -1,7 +1,7 @@
 {
-  "name": "dsh-yinkesi",
+  "name": "dsh-new-designed-ui",
   "version": "0.5.1",
-  "description": "A removable Claude-inspired compact white UI skin for DeepSeek Harness Web.",
+  "description": "A redesigned, pure-white, Claude-inspired UI for DeepSeek Harness Web.",
   "type": "module",
   "main": "./lib/index.js",
   "exports": {

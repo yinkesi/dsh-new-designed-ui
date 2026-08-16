@@ -1,6 +1,6 @@
 'use strict'
 
-const THEME_SOURCE = 'dsh-yinkesi'
+const THEME_SOURCE = 'dsh-new-designed-ui'
 const noop = () => {}
 
 function toThemeOverrides(tokens) {

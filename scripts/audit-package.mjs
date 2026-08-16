@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 const projectRoot = dirname(fileURLToPath(new URL('../package.json', import.meta.url)))
 const manifest = JSON.parse(await readFile(join(projectRoot, 'package.json'), 'utf8'))
 
-assert.equal(manifest.name, 'dsh-yinkesi')
+assert.equal(manifest.name, 'dsh-new-designed-ui')
 assert.equal(manifest.version, '0.5.1')
 assert.equal(manifest.dsh?.bundle?.patch, './cordis.patch.yml')
 assert.equal(manifest.dsh?.client?.platform, 'web')
@@ -37,11 +37,11 @@ const clientSource = await readFile(join(projectRoot, 'lib/client.js'), 'utf8')
 
 assert.equal(
   patchSource.replaceAll('\r\n', '\n'),
-  '- insert:\n    - id: dsh-yinkesi\n      name: dsh-yinkesi\n',
+  '- insert:\n    - id: dsh-new-designed-ui\n      name: dsh-new-designed-ui\n',
 )
 assert.match(hostSource, /export\s+function\s+apply\s*\([^)]*\)\s*\{\s*\}/)
 assert.doesNotMatch(hostSource, /\bimport\s|\brequire\s*\(|\bfetch\s*\(|process\.|globalThis|window\.|document\./)
-assert.match(clientSource, /id:\s*["']dsh-yinkesi["']/)
+assert.match(clientSource, /id:\s*["']dsh-new-designed-ui["']/)
 assert.doesNotMatch(clientSource, /__YINKESI_[A-Z0-9_]+__/)
 assert.doesNotMatch(clientSource, /\brequire\(["']\.\.?\//, 'local imports must be bundled')
 assert.doesNotMatch(hostSource, /node:(?:fs|child_process|net|http|https)|process\.env|fetch\s*\(/)
@@ -67,4 +67,4 @@ for (const [label, pattern] of forbiddenClientPatterns) {
   assert.doesNotMatch(clientSource, pattern, `${label} is not permitted in the browser bundle`)
 }
 
-process.stdout.write('Yinkesi package audit passed.\n')
+process.stdout.write('New Designed UI package audit passed.\n')

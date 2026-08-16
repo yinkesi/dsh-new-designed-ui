@@ -11,7 +11,7 @@ async function readManifest() {
 test('package manifest exposes only the audited Yinkesi host and web client', async () => {
   const manifest = await readManifest()
 
-  assert.equal(manifest.name, 'dsh-yinkesi')
+  assert.equal(manifest.name, 'dsh-new-designed-ui')
   assert.equal(manifest.version, '0.5.1')
   assert.equal(manifest.type, 'module')
   assert.equal(manifest.main, './lib/index.js')
@@ -59,7 +59,7 @@ test('bundle patch inserts only the isolated Yinkesi graph row', async () => {
   const patch = await readFile(new URL('../cordis.patch.yml', import.meta.url), 'utf8')
   assert.equal(
     patch.replaceAll('\r\n', '\n'),
-    '- insert:\n    - id: dsh-yinkesi\n      name: dsh-yinkesi\n',
+    '- insert:\n    - id: dsh-new-designed-ui\n      name: dsh-new-designed-ui\n',
   )
   for (const officialRow of ['root', 'sidebar', 'conversation', 'trajectory']) {
     assert.doesNotMatch(patch, new RegExp(`(?:id|name):\\s*${officialRow}(?:\\s|$)`, 'm'))

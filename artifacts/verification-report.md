@@ -1,4 +1,4 @@
-# Yinkesi 0.5.1 verification report
+# New Designed UI 0.5.1 verification report
 
 Verified on 2026-08-16 against the user's local DeepSeek Harness Web `0.1.0-rc.5` source checkout and the public `0.1.0-rc.6` npm release.
 
@@ -6,10 +6,10 @@ This revision builds on the pure-white Claude-inspired skin (0.5.0) and extends 
 
 ## Delivery
 
-- Package: `~\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.5.1.tgz`
+- Package: `~\Documents\Codex\2026-08-14\de\outputs\dsh-new-designed-ui-0.5.1.tgz`
 - SHA256: `66F81BA14BB9AA37B0C34A7E84877E54553881E0F7EC6B98AC3A53400365A151`
 - Installed profile: `web`
-- Installed bundle: `dsh-yinkesi@0.5.1`
+- Installed bundle: `dsh-new-designed-ui@0.5.1`
 - Local service: `http://127.0.0.1:3080/`
 - Profile backup: `~\Documents\Codex\2026-08-14\de\outputs\yinkesi-profile-backup-20260816-165230`
 
@@ -27,7 +27,7 @@ This revision builds on the pure-white Claude-inspired skin (0.5.0) and extends 
 - The installed client returns HTTP 200 and serves `packageVersion: "0.5.1"`.
 - Verifier result: `ok: true`, compatibility `web-v1`.
 - Pure-white palette resolved; font family excludes `Segoe UI Variable`; global letter spacing is `normal`.
-- Conversation text resolves to `"Yinkesi Serif", Georgia, "Noto Serif SC", …`; `Noto Serif SC` is present and loads, so Chinese prose renders in the high-quality serif instead of SimSun.
+- Conversation text resolves to `"New Designed UI Serif", Georgia, "Noto Serif SC", …`; `Noto Serif SC` is present and loads, so Chinese prose renders in the high-quality serif instead of SimSun.
 - The interface sans stack now prefers `Noto Sans SC` before Microsoft YaHei.
 - The New Session button renders as a Claude-style bordered button; the bottom identity row opens the official Settings panel.
 - No composer submission, model request, console error, page error, or external request occurred.
@@ -38,7 +38,7 @@ From the DeepSeek Harness source directory:
 
 ```powershell
 $env:DSH_HOME = '~\Documents\Codex\2026-08-14\de-e\work\dsh-home'
-pnpm dsh plugin --profile web remove dsh-yinkesi
+pnpm dsh plugin --profile web remove dsh-new-designed-ui
 ```
 
 Restart DeepSeek Harness. The official presentation returns, while sessions and data remain intact.

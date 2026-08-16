@@ -58,10 +58,10 @@ class FakeDocument {
   }
 
   querySelector(selector) {
-    if (selector !== 'style[data-plugin="dsh-yinkesi"][data-yinkesi-style="runtime"]') return null
+    if (selector !== 'style[data-plugin="dsh-new-designed-ui"][data-yinkesi-style="runtime"]') return null
     return this.head.childNodes.find((node) => (
       node.tagName === 'STYLE'
-      && node.getAttribute('data-plugin') === 'dsh-yinkesi'
+      && node.getAttribute('data-plugin') === 'dsh-new-designed-ui'
       && node.getAttribute('data-yinkesi-style') === 'runtime'
     )) ?? null
   }
@@ -114,26 +114,26 @@ test('runtime registers reversible theme and one owned style node', () => {
   plugin.apply(ctx)
 
   assert.equal(overrides.length, 2)
-  assert.equal(overrides[0].source, 'dsh-yinkesi')
+  assert.equal(overrides[0].source, 'dsh-new-designed-ui')
   assert.deepEqual(overrides[0].values['--dsw-alias-bg-base'], {
     light: '#FAF9F7',
     dark: '#FAF9F7',
   })
-  const pluginStyles = document.head.childNodes.filter((node) => node.getAttribute('data-plugin') === 'dsh-yinkesi')
+  const pluginStyles = document.head.childNodes.filter((node) => node.getAttribute('data-plugin') === 'dsh-new-designed-ui')
   assert.equal(pluginStyles.length, 1)
   assert.equal(pluginStyles[0].textContent, ':root { --yinkesi-ready: 1; }')
 
   while (cleanups.length) cleanups.pop()()
   assert.equal(themeDisposed, 2)
   assert.equal(document.head.childNodes.includes(unrelated), true)
-  assert.equal(document.head.childNodes.some((node) => node.getAttribute('data-plugin') === 'dsh-yinkesi'), false)
+  assert.equal(document.head.childNodes.some((node) => node.getAttribute('data-plugin') === 'dsh-new-designed-ui'), false)
 })
 
 test('style lifecycle restores a matching node it did not create', () => {
   const { installStyle } = require('../src/client/style-lifecycle.cjs')
   const document = new FakeDocument()
   const existing = document.createElement('style')
-  existing.setAttribute('data-plugin', 'dsh-yinkesi')
+  existing.setAttribute('data-plugin', 'dsh-new-designed-ui')
   existing.setAttribute('data-yinkesi-style', 'runtime')
   existing.textContent = 'previous text'
   document.head.appendChild(existing)
