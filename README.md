@@ -1,6 +1,6 @@
 # Yinkesi
 
-Yinkesi (`dsh-yinkesi`) is a removable presentation plugin for DeepSeek Harness Web. It keeps the DeepSeek Harness name and all official behavior while applying a compact, white, Claude-inspired sidebar hierarchy, an asset-free cross-platform font stack, a blue DeepSeek whale identity, and restrained interaction polish. The bottom DeepSeek Harness whale-and-name row doubles as the Settings trigger: clicking it opens the official Settings panel.
+Yinkesi (`dsh-yinkesi`) is a removable presentation plugin for DeepSeek Harness Web. It keeps the DeepSeek Harness name and all official behavior while applying a pure-white, Claude-inspired sidebar hierarchy, a Claude-style New Session button, a system sans UI stack plus an inlined open-source serif for conversation text, a blue DeepSeek whale identity, and restrained interaction polish. The bottom DeepSeek Harness whale-and-name row doubles as the Settings trigger: clicking it opens the official Settings panel.
 
 ## Boundary
 
@@ -12,13 +12,13 @@ Yinkesi (`dsh-yinkesi`) is a removable presentation plugin for DeepSeek Harness 
 
 ## Typography
 
-Yinkesi ships no fonts and fetches none. It uses this dependency-free stack:
+The interface chrome uses a system sans stack:
 
 ```css
 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Microsoft YaHei UI", "Microsoft YaHei", sans-serif
 ```
 
-The stack yields San Francisco on Apple platforms, Arial for Latin text on Windows, and Microsoft YaHei UI for Chinese. Global letter spacing is neutral (`0`), never a single negative tracking value across Chinese and Latin text.
+Conversation text uses a bundled open-source serif (Newsreader, SIL OFL) to approximate Claude's reading serif, with Georgia and Songti/STSong as fallbacks. No Anthropic proprietary font is bundled or fetched. Global letter spacing is neutral (`0`).
 
 ## Compatibility
 
@@ -30,7 +30,7 @@ Install the prebuilt archive with the official profile command:
 
 ```powershell
 $env:DSH_HOME = 'C:\path\to\dsh-home'
-pnpm dsh plugin --profile web add 'C:\path\to\dsh-yinkesi-0.4.0.tgz'
+pnpm dsh plugin --profile web add 'C:\path\to\dsh-yinkesi-0.5.0.tgz'
 ```
 
 Remove Yinkesi and return to the untouched official interface:

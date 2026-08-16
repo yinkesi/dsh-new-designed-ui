@@ -290,6 +290,12 @@
   {
     "method": "POST",
     "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/inventory",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
     "url": "http://127.0.0.1:3080/api/credentials.describe",
     "external": false
   },
@@ -309,12 +315,6 @@
     "method": "POST",
     "type": "fetch",
     "url": "http://127.0.0.1:3080/api/settings.describe",
-    "external": false
-  },
-  {
-    "method": "POST",
-    "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/dynamicCordisRunner/inventory",
     "external": false
   },
   {
@@ -360,30 +360,6 @@
     "external": false
   },
   {
-    "method": "POST",
-    "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/settings.describe",
-    "external": false
-  },
-  {
-    "method": "POST",
-    "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/settings.describe",
-    "external": false
-  },
-  {
-    "method": "POST",
-    "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/settings.describe",
-    "external": false
-  },
-  {
-    "method": "POST",
-    "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/settings.describe",
-    "external": false
-  },
-  {
     "method": "GET",
     "type": "other",
     "url": "http://127.0.0.1:3080/favicon.svg",
@@ -392,7 +368,13 @@
   {
     "method": "POST",
     "type": "fetch",
-    "url": "http://127.0.0.1:3080/api/credentials.describe",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
     "external": false
   },
   {
@@ -417,6 +399,24 @@
     "method": "POST",
     "type": "fetch",
     "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/settings.describe",
+    "external": false
+  },
+  {
+    "method": "POST",
+    "type": "fetch",
+    "url": "http://127.0.0.1:3080/api/credentials.describe",
     "external": false
   },
   {
