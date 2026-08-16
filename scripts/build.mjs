@@ -29,18 +29,21 @@ function wrapModule(id, source) {
 await rm(outputRoot, { force: true, recursive: true })
 await mkdir(outputRoot, { recursive: true })
 
-const [hostSource, styleSource, tokenSource, motionSource, whaleSource] = await Promise.all([
+const [hostSource, styleSource, tokenSource, motionSource, whaleSource, serifSource] = await Promise.all([
   readProjectFile('src/index.js'),
   readProjectFile('src/styles/yinkesi.css'),
   readProjectFile('src/theme/tokens.json'),
   readProjectFile('src/theme/motion.json'),
   readProjectFile('src/assets/deepseek-whale.svg'),
+  readFile(join(projectRoot, 'src/assets/claude-serif.woff2')),
 ])
 
 const tokenData = JSON.parse(tokenSource)
 const motionData = JSON.parse(motionSource)
 const whaleDataUri = svgDataUri(whaleSource.trim())
+const serifDataUri = `data:font/woff2;base64,${serifSource.toString('base64')}`
 const styleText = styleSource
+  .replaceAll('__YINKESI_SERIF_DATA_URI__', serifDataUri)
   .replaceAll('__YINKESI_WHALE_DATA_URI__', whaleDataUri)
   .replaceAll('__YINKESI_WHALE_MASK__', whaleDataUri)
   .replaceAll('__YINKESI_MOTION_PRESS__', motionData.duration.press)
@@ -98,7 +101,7 @@ window.__ModuleLoader__.load({
       tokens: ${JSON.stringify(tokenData)},
       motion: ${JSON.stringify(motionData)},
       whaleDataUri: ${JSON.stringify(whaleDataUri)},
-      packageVersion: "0.4.0"
+      packageVersion: "0.5.0"
     });
   }
 });

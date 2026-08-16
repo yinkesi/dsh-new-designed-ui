@@ -189,7 +189,7 @@ async function captureScreenshots(page) {
   for (const [name, width, height] of targets) {
     await page.setViewportSize({ width, height })
     await page.waitForTimeout(150)
-    const path = join(artifactsRoot, `yinkesi-040-${name}.png`)
+    const path = join(artifactsRoot, `yinkesi-050-${name}.png`)
     await page.screenshot({ path, fullPage: false, animations: 'disabled' })
     output[name] = { width, height, path }
   }
