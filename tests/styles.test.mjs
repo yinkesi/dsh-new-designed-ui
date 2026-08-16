@@ -67,6 +67,16 @@ test('light-only skin pins web-v1 gradient and syntax variables outside ThemeRun
   assert.match(css, /--json-tree-punctuation:\s*#202124/i)
 })
 
+test('skin ships a self-contained Claude-style serif for conversation text', async () => {
+  const css = await read('../src/styles/yinkesi.css')
+
+  assert.match(css, /@font-face[^{]*\{\s*font-family:\s*"Yinkesi Serif"/s)
+  assert.match(css, /src:\s*url\("__YINKESI_SERIF_DATA_URI__"\)\s*format\("woff2"\)/)
+  assert.match(css, /--yinkesi-font-serif:\s*"Yinkesi Serif"/)
+  assert.match(css, /\[data-conversation-scroll\][^{]*\{[^}]*font-family:\s*var\(--yinkesi-font-serif\)/s)
+  assert.doesNotMatch(css, /https?:\/\//i)
+})
+
 test('skin has resilient motion, transparency, contrast, and responsive fallbacks', async () => {
   const css = await read('../src/styles/yinkesi.css')
 

@@ -4,6 +4,13 @@
  * official theme-token override and all first-party controls remain visible.
  */
 
+@font-face {
+  font-family: "Yinkesi Serif";
+  src: url("__YINKESI_SERIF_DATA_URI__") format("woff2");
+  font-weight: 300 800;
+  font-display: swap;
+}
+
 /* Harness publishes the resolved --dsw-* variables on body. Keep Yinkesi's
  * aliases in that same inheritance scope so var() sees the published values. */
 html[data-yinkesi-compatible="web-v1"] body {
@@ -15,6 +22,7 @@ html[data-yinkesi-compatible="web-v1"] body {
   --yinkesi-strong-hairline: var(--dsw-alias-border-l3);
   --yinkesi-whale-blue: var(--dsw-alias-brand-primary);
   --yinkesi-focus: var(--dsw-alias-brand-primary);
+  --yinkesi-font-serif: "Yinkesi Serif", Georgia, "Songti SC", "STSong", "SimSun", serif;
   --yinkesi-radius-sidebar: 1.125rem;
   --yinkesi-radius-panel: 1rem;
   --yinkesi-radius-control: 0.625rem;
@@ -146,25 +154,26 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child > bu
   justify-content: flex-start;
   gap: 0.625rem;
   width: 100%;
-  min-height: var(--yinkesi-sidebar-row-height);
+  min-height: 2.375rem;
   margin: 0;
-  padding: 0 0.5rem;
-  border: 0;
-  border-radius: var(--yinkesi-control-radius);
-  background: transparent;
+  padding: 0 0.75rem;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 0.5625rem;
+  background: #FFFFFF;
   color: var(--dsw-alias-label-primary);
   font: inherit;
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.25rem;
   letter-spacing: 0;
   text-align: left;
   cursor: pointer;
-  transition: transform var(--yinkesi-motion-press) var(--yinkesi-standard), opacity var(--yinkesi-motion-hover) var(--yinkesi-standard);
+  transition: background var(--yinkesi-motion-hover) var(--yinkesi-standard), border-color var(--yinkesi-motion-hover) var(--yinkesi-standard), transform var(--yinkesi-motion-press) var(--yinkesi-standard), opacity var(--yinkesi-motion-hover) var(--yinkesi-standard);
 }
 
 html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child > button:hover {
-  background: var(--dsw-alias-interactive-bg-hover);
+  background: #F7F7F6;
+  border-color: var(--dsw-alias-border-l3);
 }
 
 html[data-yinkesi-compatible="web-v1"] [data-slot="sidebar"] > :first-child > button:active {
@@ -310,6 +319,7 @@ html[data-yinkesi-compatible="web-v1"] [data-slot="conversation.session.header"]
 
 html[data-yinkesi-compatible="web-v1"] [data-conversation-scroll] {
   background: var(--yinkesi-content-surface);
+  font-family: var(--yinkesi-font-serif);
   scrollbar-color: var(--dsw-alias-scrollbar-bg-l1) transparent;
   scroll-behavior: smooth;
 }

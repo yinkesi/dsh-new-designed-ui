@@ -32,6 +32,7 @@ test('build emits a deterministic, self-contained DSH client module', async () =
   assert.match(source, /window\.__ModuleLoader__\.load/)
   assert.match(source, /DeepSeek Harness/)
   assert.match(source, /data:image\/svg\+xml/)
+  assert.match(source, /data:font\/woff2;base64,/)
   assert.match(source, /scale\(\.98\)/)
   assert.match(source, /transition-duration:\s*1ms/)
   assert.match(source, /web-v1/)
