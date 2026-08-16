@@ -22,7 +22,7 @@ The stack yields San Francisco on Apple platforms, Arial for Latin text on Windo
 
 ## Compatibility
 
-Yinkesi targets the DeepSeek Harness Web `web-v1` layout contract and is validated against DeepSeek Harness `0.1.0-rc.5` and the public `0.1.0-rc.6`. The reversible DOM adapter only proxies the first-party Conversation/Trajectory and Settings controls; the original tabs remain the state owner. When the layout is not recognized, the adapter falls back to theme-only styling and leaves every first-party control visible.
+Yinkesi targets the DeepSeek Harness Web `web-v1` layout contract and is validated against DeepSeek Harness `0.1.0-rc.5` and the public `0.1.0-rc.6`. The reversible DOM adapter only proxies the first-party Settings control through the bottom brand row; the original Conversation/Trajectory tabs are left untouched. When the layout is not recognized, the adapter falls back to theme-only styling and leaves every first-party control visible.
 
 ## Install and remove
 
@@ -30,7 +30,7 @@ Install the prebuilt archive with the official profile command:
 
 ```powershell
 $env:DSH_HOME = 'C:\path\to\dsh-home'
-pnpm dsh plugin --profile web add 'C:\path\to\dsh-yinkesi-0.3.0.tgz'
+pnpm dsh plugin --profile web add 'C:\path\to\dsh-yinkesi-0.4.0.tgz'
 ```
 
 Remove Yinkesi and return to the untouched official interface:
