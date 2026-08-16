@@ -14,16 +14,16 @@
 
 ### Repositories and installations
 
-- Yinkesi source: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi`
+- Yinkesi source: `~\Documents\Codex\2026-08-14\de\work\yinkesi`
 - Yinkesi starting commit: `8545d9f`
-- DeepSeek Harness rc.5 source: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\deepseek-harness`
-- Real DSH home: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\dsh-home`
+- DeepSeek Harness rc.5 source: `~\Documents\Codex\2026-08-14\de-e\work\deepseek-harness`
+- Real DSH home: `~\Documents\Codex\2026-08-14\de-e\work\dsh-home`
 - Real profile: `web`
-- Desktop launcher: `C:\Users\LENOVO\Desktop\DeepSeek Harness.lnk`
-- Launcher script: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\Start-DeepSeek-Harness.ps1`
-- Current delivered package: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.1.0.tgz`
+- Desktop launcher: `~\Desktop\DeepSeek Harness.lnk`
+- Launcher script: `~\Documents\Codex\2026-08-14\de\outputs\Start-DeepSeek-Harness.ps1`
+- Current delivered package: `~\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.1.0.tgz`
 - Current package SHA256: `946920F5D0DF0E6F8A545394C9C385A816C5CF2C601FBBEF53DEE3CC2DD9FE31`
-- Existing profile backup: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\yinkesi-profile-backup-20260814-182315`
+- Existing profile backup: `~\Documents\Codex\2026-08-14\de\outputs\yinkesi-profile-backup-20260814-182315`
 
 The current `0.1.0` package is installed and normally served at `http://127.0.0.1:3080/`. It passed 24 tests, package audit, isolated install/remove, and real browser verification. Do not modify the official Harness checkout.
 
@@ -35,7 +35,7 @@ Read the complete specification before editing:
 
 Visual reference:
 
-`C:\Users\LENOVO\AppData\Local\Temp\codex-clipboard-e3f71236-5120-4f0a-bab2-528afeab6a54.png`
+`~\AppData\Local\Temp\codex-clipboard-e3f71236-5120-4f0a-bab2-528afeab6a54.png`
 
 ### File map
 
@@ -64,7 +64,7 @@ Visual reference:
 Run:
 
 ```powershell
-Set-Location 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi'
+Set-Location '~\Documents\Codex\2026-08-14\de\work\yinkesi'
 git status --short
 git rev-parse --short HEAD
 ```
@@ -716,7 +716,7 @@ git commit -m "test: verify compact white Yinkesi presentation"
 Run:
 
 ```powershell
-Set-Location 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi'
+Set-Location '~\Documents\Codex\2026-08-14\de\work\yinkesi'
 pnpm run pack:local
 Get-FileHash -Algorithm SHA256 -LiteralPath '.\dist\dsh-yinkesi-0.2.0.tgz'
 ```
@@ -728,8 +728,8 @@ Expected: tests and audit run before packing; tarball contains only six approved
 Use a new explicit directory name; do not delete or reuse the real profile:
 
 ```powershell
-$testHome = 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc5-test-home'
-$testWorkspace = 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc5-workspace'
+$testHome = '~\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc5-test-home'
+$testWorkspace = '~\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc5-workspace'
 if (Test-Path -LiteralPath $testHome) { throw "Test home already exists: $testHome" }
 if (Test-Path -LiteralPath $testWorkspace) { throw "Test workspace already exists: $testWorkspace" }
 $null = New-Item -ItemType Directory -Path $testHome
@@ -744,8 +744,8 @@ Run from the Harness checkout:
 $env:DSH_HOME = $testHome
 $env:DSH_TELEMETRY_DISABLED = '1'
 $env:DSH_PERMISSION_MODE = 'read-only'
-Set-Location 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\deepseek-harness'
-pnpm dsh plugin --profile web add 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi\dist\dsh-yinkesi-0.2.0.tgz'
+Set-Location '~\Documents\Codex\2026-08-14\de-e\work\deepseek-harness'
+pnpm dsh plugin --profile web add '~\Documents\Codex\2026-08-14\de\work\yinkesi\dist\dsh-yinkesi-0.2.0.tgz'
 pnpm dsh plugin --profile web why dsh-yinkesi
 pnpm dsh --profile web --dump-config
 ```
@@ -761,7 +761,7 @@ $env:DSH_HOME = $testHome
 $env:DSH_TELEMETRY_DISABLED = '1'
 $env:DSH_PERMISSION_MODE = 'read-only'
 Set-Location $testWorkspace
-node 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\deepseek-harness\apps\cli\lib\bin.js' web --host 127.0.0.1 --port 3181
+node '~\Documents\Codex\2026-08-14\de-e\work\deepseek-harness\apps\cli\lib\bin.js' web --host 127.0.0.1 --port 3181
 ```
 
 Keep this as a known terminal session so it can be stopped with Ctrl+C.
@@ -774,7 +774,7 @@ In another shell:
 $env:YINKESI_BASE_URL = 'http://127.0.0.1:3181'
 $env:YINKESI_DISMISS_FIRST_RUN = '1'
 Remove-Item Env:YINKESI_VERIFY_EXISTING_SESSION -ErrorAction SilentlyContinue
-Set-Location 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi'
+Set-Location '~\Documents\Codex\2026-08-14\de\work\yinkesi'
 node scripts/verify-browser.mjs
 ```
 
@@ -804,8 +804,8 @@ Expected at handoff time: `0.1.0-rc.6`. If npm reports a newer version, test bot
 Run the same validated creation pattern as Task 9 with:
 
 ```powershell
-$testHome = 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc6-test-home'
-$testWorkspace = 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc6-workspace'
+$testHome = '~\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc6-test-home'
+$testWorkspace = '~\Documents\Codex\2026-08-14\de\work\dsh-yinkesi-020-rc6-workspace'
 ```
 
 - [ ] **Step 3: Install the plugin into rc.6**
@@ -816,7 +816,7 @@ Run:
 $env:DSH_HOME = $testHome
 $env:DSH_TELEMETRY_DISABLED = '1'
 $env:DSH_PERMISSION_MODE = 'read-only'
-npx -y @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi\dist\dsh-yinkesi-0.2.0.tgz'
+npx -y @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web add '~\Documents\Codex\2026-08-14\de\work\yinkesi\dist\dsh-yinkesi-0.2.0.tgz'
 npx -y @deepseek-ai/dsh@0.1.0-rc.6 plugin --profile web why dsh-yinkesi
 ```
 
@@ -841,7 +841,7 @@ Run:
 ```powershell
 $env:YINKESI_BASE_URL = 'http://127.0.0.1:3182'
 $env:YINKESI_DISMISS_FIRST_RUN = '1'
-Set-Location 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi'
+Set-Location '~\Documents\Codex\2026-08-14\de\work\yinkesi'
 node scripts/verify-browser.mjs
 ```
 
@@ -887,7 +887,7 @@ Use `view_image` at original detail. Reject the build if any of these occur:
 ## Task 12: Install `0.2.0` into the real profile safely
 
 **Files:**
-- Copy package to: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.2.0.tgz`
+- Copy package to: `~\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.2.0.tgz`
 - Backup exact profile files before mutation
 
 - [ ] **Step 1: Copy the final package without overwriting another file**
@@ -896,7 +896,7 @@ Validate the source tarball and output directory, require the target not to exis
 
 - [ ] **Step 2: Create a new exact-file profile backup**
 
-Create a timestamped directory under `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs`. Copy only existing `package.json`, `cordis.patch.yml`, `cordis.yml`, `pnpm-workspace.yaml`, and `pnpm-lock.yaml` from the real web profile. Do not recursively copy or delete the profile.
+Create a timestamped directory under `~\Documents\Codex\2026-08-14\de\outputs`. Copy only existing `package.json`, `cordis.patch.yml`, `cordis.yml`, `pnpm-workspace.yaml`, and `pnpm-lock.yaml` from the real web profile. Do not recursively copy or delete the profile.
 
 - [ ] **Step 3: Stop only the expected Harness listener**
 
@@ -907,10 +907,10 @@ Resolve the sole port-3080 listener, require address `127.0.0.1`, require `node.
 Run from the Harness checkout:
 
 ```powershell
-$env:DSH_HOME = 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\dsh-home'
+$env:DSH_HOME = '~\Documents\Codex\2026-08-14\de-e\work\dsh-home'
 $env:DSH_TELEMETRY_DISABLED = '1'
 pnpm dsh plugin --profile web remove dsh-yinkesi
-pnpm dsh plugin --profile web add 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.2.0.tgz'
+pnpm dsh plugin --profile web add '~\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.2.0.tgz'
 pnpm dsh plugin --profile web why dsh-yinkesi
 pnpm dsh --profile web --dump-config
 ```
@@ -922,7 +922,7 @@ Expected: exactly one installed `dsh-yinkesi@0.2.0` and one Yinkesi config layer
 Run:
 
 ```powershell
-& 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\Start-DeepSeek-Harness.ps1'
+& '~\Documents\Codex\2026-08-14\de\outputs\Start-DeepSeek-Harness.ps1'
 ```
 
 Expected: `http://127.0.0.1:3080/` returns 200 and `/plugins/dsh-yinkesi/client.js` returns 200 with no unresolved placeholders.
@@ -935,7 +935,7 @@ Run:
 $env:YINKESI_BASE_URL = 'http://127.0.0.1:3080'
 $env:YINKESI_VERIFY_EXISTING_SESSION = '1'
 Remove-Item Env:YINKESI_DISMISS_FIRST_RUN -ErrorAction SilentlyContinue
-Set-Location 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\work\yinkesi'
+Set-Location '~\Documents\Codex\2026-08-14\de\work\yinkesi'
 node scripts/verify-browser.mjs
 ```
 
@@ -997,7 +997,7 @@ Run:
 ```powershell
 git status --short
 git log --oneline -8
-Get-FileHash -Algorithm SHA256 -LiteralPath 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.2.0.tgz'
+Get-FileHash -Algorithm SHA256 -LiteralPath '~\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.2.0.tgz'
 Invoke-WebRequest -Uri 'http://127.0.0.1:3080/plugins/dsh-yinkesi/client.js' -UseBasicParsing
 ```
 

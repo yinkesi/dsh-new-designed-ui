@@ -6,7 +6,10 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const require = createRequire(import.meta.url)
-const playwrightRoot = String.raw`C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\deepseek-harness\apps\web\node_modules\playwright`
+const playwrightRoot = process.env.YINKESI_PLAYWRIGHT_ROOT
+if (!playwrightRoot) {
+  throw new Error('Set YINKESI_PLAYWRIGHT_ROOT to a Playwright module directory (e.g. the DeepSeek Harness workspace apps/web/node_modules/playwright).')
+}
 const { chromium } = require(playwrightRoot)
 
 const projectRoot = dirname(fileURLToPath(new URL('../package.json', import.meta.url)))

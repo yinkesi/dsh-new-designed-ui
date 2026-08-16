@@ -6,7 +6,7 @@ This revision records the user's latest direction and is approved for implementa
 
 Reference image:
 
-`C:\Users\LENOVO\AppData\Local\Temp\codex-clipboard-e3f71236-5120-4f0a-bab2-528afeab6a54.png`
+`~\AppData\Local\Temp\codex-clipboard-e3f71236-5120-4f0a-bab2-528afeab6a54.png`
 
 Current Yinkesi screenshots:
 

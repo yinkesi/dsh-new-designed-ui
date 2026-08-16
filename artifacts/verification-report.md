@@ -6,12 +6,12 @@ This revision builds on the pure-white Claude-inspired skin (0.5.0) and extends 
 
 ## Delivery
 
-- Package: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.5.1.tgz`
+- Package: `~\Documents\Codex\2026-08-14\de\outputs\dsh-yinkesi-0.5.1.tgz`
 - SHA256: `66F81BA14BB9AA37B0C34A7E84877E54553881E0F7EC6B98AC3A53400365A151`
 - Installed profile: `web`
 - Installed bundle: `dsh-yinkesi@0.5.1`
 - Local service: `http://127.0.0.1:3080/`
-- Profile backup: `C:\Users\LENOVO\Documents\Codex\2026-08-14\de\outputs\yinkesi-profile-backup-20260816-165230`
+- Profile backup: `~\Documents\Codex\2026-08-14\de\outputs\yinkesi-profile-backup-20260816-165230`
 
 ## Automated checks
 
@@ -37,7 +37,7 @@ This revision builds on the pure-white Claude-inspired skin (0.5.0) and extends 
 From the DeepSeek Harness source directory:
 
 ```powershell
-$env:DSH_HOME = 'C:\Users\LENOVO\Documents\Codex\2026-08-14\de-e\work\dsh-home'
+$env:DSH_HOME = '~\Documents\Codex\2026-08-14\de-e\work\dsh-home'
 pnpm dsh plugin --profile web remove dsh-yinkesi
 ```
 
