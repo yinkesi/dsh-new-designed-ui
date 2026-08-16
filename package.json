@@ -1,6 +1,6 @@
 {
   "name": "dsh-new-designed-ui",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A redesigned, pure-white, Claude-inspired UI for DeepSeek Harness Web.",
   "type": "module",
   "main": "./lib/index.js",

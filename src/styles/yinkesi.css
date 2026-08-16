@@ -306,6 +306,39 @@ html[data-yinkesi-compatible="web-v1"] [data-yinkesi-whale] {
   -webkit-mask-size: contain;
 }
 
+/* First-party whale silhouettes: restore the DeepSeek blue and make them pokeable. */
+html[data-yinkesi-compatible="web-v1"] [data-slot="root"] svg:has(path[d*="ZM"]) {
+  color: var(--yinkesi-whale-blue);
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform var(--yinkesi-motion-hover) var(--yinkesi-standard);
+}
+
+html[data-yinkesi-compatible="web-v1"] [data-slot="root"] svg:has(path[d*="ZM"]):hover {
+  transform: scale(1.07);
+}
+
+html[data-yinkesi-compatible="web-v1"] [data-slot="root"] [data-yinkesi-whale-boop="1"] {
+  animation: yinkesi-whale-boop 0.6s var(--yinkesi-spring);
+}
+
+@keyframes yinkesi-whale-boop {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.22) rotate(-7deg); }
+  55% { transform: scale(0.9) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-yinkesi-compatible="web-v1"] [data-slot="root"] svg:has(path[d*="ZM"]) {
+    transition: none;
+  }
+
+  html[data-yinkesi-compatible="web-v1"] [data-slot="root"] [data-yinkesi-whale-boop="1"] {
+    animation: none;
+  }
+}
+
 /* Conversation: calm readable measure with document-like assistant answers. */
 html[data-yinkesi-compatible="web-v1"] [data-slot="conversation"] > :first-child {
   --dsh-chat-content-width: 47.5rem;

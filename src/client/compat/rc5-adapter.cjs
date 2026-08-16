@@ -104,6 +104,22 @@ function appendWhale(document, parent, whaleDataUri) {
   return whale
 }
 
+// First-party whale silhouettes render as `svg` with a multi-subpath `path`
+// (the body plus two eyes share one `d` containing `ZM`). Mark them pokeable:
+// a click triggers a short "boop" that the runtime stylesheet animates.
+function enhanceWhales(document, setTimer) {
+  if (!document?.querySelectorAll) return
+  for (const svg of document.querySelectorAll('svg')) {
+    if (svg.hasAttribute?.('data-yinkesi-whale-fun')) continue
+    if (!svg.querySelector?.('path[d*="ZM"]')) continue
+    svg.setAttribute('data-yinkesi-whale-fun', '1')
+    svg.addEventListener?.('click', () => {
+      svg.setAttribute('data-yinkesi-whale-boop', '1')
+      setTimer(() => svg.removeAttribute('data-yinkesi-whale-boop'), 640)
+    })
+  }
+}
+
 function settingsHint(document, sourceButton) {
   const lang = String(document?.documentElement?.getAttribute?.('lang') ?? '').toLowerCase()
   const source = textOf(sourceButton) || String(sourceButton?.getAttribute?.('aria-label') ?? '').trim()
@@ -272,6 +288,7 @@ function installRc5Adapter(options = {}) {
       return
     }
     ensureBrand(layout)
+    enhanceWhales(document, setTimer)
   }
 
   function scheduleSync() {
@@ -333,6 +350,7 @@ module.exports = {
   COMPATIBILITY_MARKER,
   COMPATIBILITY_WARNING,
   detectRc5Layout,
+  enhanceWhales,
   installRc5Adapter,
   isCompleteLayout,
   isPresentationMutation,

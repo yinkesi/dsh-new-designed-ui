@@ -7,7 +7,7 @@ const projectRoot = dirname(fileURLToPath(new URL('../package.json', import.meta
 const manifest = JSON.parse(await readFile(join(projectRoot, 'package.json'), 'utf8'))
 
 assert.equal(manifest.name, 'dsh-new-designed-ui')
-assert.equal(manifest.version, '0.5.1')
+assert.equal(manifest.version, '0.5.2')
 assert.equal(manifest.dsh?.bundle?.patch, './cordis.patch.yml')
 assert.equal(manifest.dsh?.client?.platform, 'web')
 assert.deepEqual(manifest.dsh?.client?.inject, ['@deepseek-ai/dsh-client-ui-theme'])

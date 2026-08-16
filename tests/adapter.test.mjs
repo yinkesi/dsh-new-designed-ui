@@ -341,3 +341,51 @@ test('streaming conversation text mutations do not trigger a layout rescan', () 
   assert.equal(scans, initialScans)
   dispose()
 })
+
+function whaleSvg(isWhale) {
+  const attributes = new Map()
+  const listeners = new Set()
+  return {
+    isWhale,
+    hasAttribute(name) { return attributes.has(name) },
+    getAttribute(name) { return attributes.has(name) ? attributes.get(name) : null },
+    setAttribute(name, value) { attributes.set(name, String(value)) },
+    removeAttribute(name) { attributes.delete(name) },
+    querySelector(selector) {
+      return selector === 'path[d*="ZM"]' && isWhale ? { d: 'M…ZM…' } : null
+    },
+    addEventListener(_type, listener) { listeners.add(listener) },
+    dispatchClick() { for (const listener of listeners) listener() },
+  }
+}
+
+test('enhanceWhales marks first-party whale svg and boops it on click', () => {
+  const { enhanceWhales } = require('../src/client/compat/rc5-adapter.cjs')
+  const whale = whaleSvg(true)
+  const icon = whaleSvg(false)
+  const timers = []
+  const document = { querySelectorAll: (selector) => (selector === 'svg' ? [whale, icon] : []) }
+
+  enhanceWhales(document, (callback) => timers.push(callback))
+
+  assert.equal(whale.hasAttribute('data-yinkesi-whale-fun'), true)
+  assert.equal(icon.hasAttribute('data-yinkesi-whale-fun'), false)
+
+  whale.dispatchClick()
+  assert.equal(whale.getAttribute('data-yinkesi-whale-boop'), '1')
+  assert.equal(timers.length, 1)
+
+  timers[0]()
+  assert.equal(whale.hasAttribute('data-yinkesi-whale-boop'), false)
+
+  // A repeat click re-boops; a second pass never re-attaches the listener.
+  whale.dispatchClick()
+  assert.equal(whale.getAttribute('data-yinkesi-whale-boop'), '1')
+  assert.equal(timers.length, 2)
+})
+
+test('enhanceWhales is defensive without a queryable document', () => {
+  const { enhanceWhales } = require('../src/client/compat/rc5-adapter.cjs')
+  assert.doesNotThrow(() => enhanceWhales(null, () => {}))
+  assert.doesNotThrow(() => enhanceWhales({}, () => {}))
+})

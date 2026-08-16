@@ -12,7 +12,7 @@ test('package manifest exposes only the audited Yinkesi host and web client', as
   const manifest = await readManifest()
 
   assert.equal(manifest.name, 'dsh-new-designed-ui')
-  assert.equal(manifest.version, '0.5.1')
+  assert.equal(manifest.version, '0.5.2')
   assert.equal(manifest.type, 'module')
   assert.equal(manifest.main, './lib/index.js')
   assert.deepEqual(manifest.exports, {

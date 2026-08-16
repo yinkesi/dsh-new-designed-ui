@@ -17,6 +17,17 @@ test('whale asset preserves the official Harness geometry and inherits DeepSeek 
   assert.equal(createHash('sha256').update(geometry).digest('hex'), '112fe133fd1d80bc5c7a785426e1ba6838458b1d21d3d8db9421273150c41182')
 })
 
+test('first-party whale silhouettes turn DeepSeek blue and poke with a boop', async () => {
+  const css = await read('../src/styles/yinkesi.css')
+
+  assert.match(css, /svg:has\(path\[d\*="ZM"\]\)\s*\{[^}]*color:\s*var\(--yinkesi-whale-blue\)/s)
+  assert.match(css, /svg:has\(path\[d\*="ZM"\]\):hover\s*\{[^}]*transform:\s*scale\(1\.07\)/s)
+  assert.match(css, /\[data-yinkesi-whale-boop="1"\]\s*\{[^}]*animation:\s*yinkesi-whale-boop/s)
+  assert.match(css, /@keyframes\s+yinkesi-whale-boop/)
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[\s\S]*?\[data-yinkesi-whale-boop="1"\][^{]*\{[^}]*animation:\s*none;/)
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[\s\S]*?svg:has\(path\[d\*="ZM"\]\)[^{]*\{[^}]*transition:\s*none;/)
+})
+
 test('skin uses stable Harness anchors and covers the approved surfaces', async () => {
   const css = await read('../src/styles/yinkesi.css')
   const selectors = [
